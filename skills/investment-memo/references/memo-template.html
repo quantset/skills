@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ticker}} ({{direction}}) — Investment Memo · {{date}}</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --tint: #f6f7f9;
+      --ink: #05070a;
+      --ink-2: #3f444e;
+      --ink-3: #747985;
+      --line: #e4e6ec;
+      --accent: #b87400;
+      --pos: #157342;
+      --neg: #b92d22;
+      --serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+      --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 48px 24px 72px; background: var(--paper); color: var(--ink); font: 400 14.5px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    .sheet { max-width: 860px; margin: 0 auto; }
+    header { padding-bottom: 20px; border-bottom: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .kicker { font: 600 11px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+    h1 { margin: 0; font: 400 36px/1.08 var(--serif); letter-spacing: -0.02em; }
+    .meta-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px 20px; padding: 14px 16px; margin-top: 16px; background: var(--tint); border: 1px solid var(--line); border-radius: 8px; font-variant-numeric: tabular-nums; }
+    .meta-strip dt { font: 500 11px/1.3 var(--mono); text-transform: uppercase; color: var(--ink-3); }
+    .meta-strip dd { margin: 3px 0 0; font: 600 15px/1.3 var(--mono); color: var(--ink); }
+    h2 { margin: 32px 0 10px; padding-top: 20px; border-top: 1px solid var(--line); font: 600 13px/1.4 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); }
+    p { margin: 8px 0; color: var(--ink-2); }
+    ul { margin: 8px 0; padding-left: 20px; color: var(--ink-2); }
+    li { margin-top: 8px; }
+    strong { color: var(--ink); }
+    .callout { padding: 14px 16px; border-left: 3px solid var(--ink); background: var(--tint); color: var(--ink); font-size: 15px; line-height: 1.55; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+    th { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1.5px solid var(--ink); font: 600 12px/1.3 var(--mono); color: var(--ink); }
+    td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+    .pos { color: var(--pos); font-weight: 600; }
+    .neg { color: var(--neg); font-weight: 600; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
+    .box { padding: 14px; border: 1px solid var(--line); border-radius: 8px; }
+    .box h3 { margin: 0 0 6px; font: 600 13px/1.3 var(--mono); }
+    footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font: 400 12px/1.5 var(--mono); color: var(--ink-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 720px) { .grid-3 { grid-template-columns: 1fr; } }
+    @media print { body { padding: 0; font-size: 12px; } }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header>
+      <div>
+        <p class="kicker">Institutional Equity Memo · {{sector}}</p>
+        <h1>{{company_name}} ({{ticker}}) — {{direction}}</h1>
+      </div>
+      <div style="text-align:right;font:500 12px/1.5 var(--mono);color:var(--ink-3)">
+        <div>Date: {{date}}</div>
+        <div>Horizon: {{horizon}} · Conviction: {{conviction}}</div>
+      </div>
+    </header>
+
+    <dl class="meta-strip">
+      <div><dt>Current Price</dt><dd>{{current_price}}</dd></div>
+      <div><dt>Base Target</dt><dd>{{base_target}} ({{base_return}})</dd></div>
+      <div><dt>Expected Return</dt><dd>{{expected_return}}</dd></div>
+      <div><dt>Asymmetry (U/D)</dt><dd>{{asymmetry}}</dd></div>
+      <div><dt>Market Cap / EV</dt><dd>{{mcap_ev}}</dd></div>
+      <div><dt>ROIC / FCF Yield</dt><dd>{{roic_fcf}}</dd></div>
+    </dl>
+
+    <h2>1. Variant View</h2>
+    <div class="callout">{{variant_view}}</div>
+
+    <h2>2. Falsifiable Thesis Pillars</h2>
+    <ul>{{thesis_bullets}}</ul>
+
+    <h2>3. Business &amp; Segment Snapshot</h2>
+    <p>{{business_snapshot}}</p>
+
+    <h2>4. What Is Priced In vs. Street Consensus</h2>
+    <p>{{whats_priced_in}}</p>
+
+    <h2>5. Driver-Based Scenario Matrix (Probabilities = 100%)</h2>
+    {{scenario_table}}
+    <div class="grid-3">
+      <div class="box"><h3>Bull Case</h3><p>{{bull_narrative}}</p></div>
+      <div class="box"><h3>Base Case</h3><p>{{base_narrative}}</p></div>
+      <div class="box"><h3>Steelmanned Bear</h3><p>{{bear_narrative}}</p></div>
+    </div>
+
+    <h2>6. Ownership, Insiders &amp; ETF Crowding</h2>
+    <p>{{ownership_and_insiders}}</p>
+
+    <h2>7. Catalysts &amp; Observable Kill-Switch Tripwires</h2>
+    {{risks_and_catalysts_table}}
+
+    <footer>
+      <span>Sources: {{provenance_citations}}</span>
+      <span>Analytical research memo — not investment advice.</span>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "quantset",
+  "version": "0.1.0",
+  "description": "Query 52,000+ global stocks (67 countries, 64yr US history), 734 crypto pairs, 40-factor stock screens, Wall Street consensus estimates, ETF look-through weights, multi-asset correlations, Treasury/TIPS curves, and reconciled financials.",
+  "author": {
+    "name": "QuantSet",
+    "email": "hello@quantset.dev",
+    "url": "https://quantset.dev"
+  },
+  "homepage": "https://quantset.dev",
+  "repository": "https://github.com/quantset/skills",
+  "license": "MIT",
+  "keywords": [
+    "stocks",
+    "market-data",
+    "crypto",
+    "forex",
+    "stock-screener",
+    "quantitative-finance",
+    "etf",
+    "earnings",
+    "macro",
+    "treasury-yields",
+    "financials"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "QuantSet",
+        "shortDescription": "Global market & quant data",
+        "longDescription": "Analyze 52,000+ global equities across 67 countries (US history to 1962), 734 crypto pairs, 42 FX currencies, hourly bars, 40+ factor stock screens, Wall Street EPS/revenue estimates, 4,899 ETF look-through holdings, multi-asset correlations, U.S. Treasury/TIPS yield curves, 82 FRED macro series, and reconciled company financials. Read-only reference data with explicit source provenance; does not execute trades or provide investment advice.",
+        "developerName": "QuantSet",
+        "category": "Data & Analytics",
+        "capabilities": [
+          "Global stock, ETF & crypto quotes and 64-year price history",
+          "40-factor equity screening, peer valuation & drawdown math",
+          "Wall Street consensus estimates, ratings & earnings surprises",
+          "ETF look-through weights, Treasury curves & FRED macro series",
+          "Reconciled company financials, revenue segments & ownership"
+        ],
+        "websiteURL": "https://quantset.dev",
+        "supportURL": "https://quantset.dev/support",
+        "privacyPolicyURL": "https://quantset.dev/privacy",
+        "termsOfServiceURL": "https://quantset.dev/terms",
+        "defaultPrompt": [
+          "Compare NVDA, AAPL, and BTCUSDT trailing returns and valuation.",
+          "What are Wall Street consensus EPS estimates for MSFT?",
+          "Show the current U.S. Treasury yield curve from 1M to 30Y."
+        ],
+        "brandColor": "#060913",
+        "brandColorDark": "#FFB224",
+        "composerIcon": "./assets/logo.png",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/quantset/SKILL.md",
+      "publication": {
+        "countries": [],
+        "release_notes": "Initial public release with 14 read-only market, quant, consensus, ETF, macro, and company-research tools."
+      }
+    }
+  }
+}
