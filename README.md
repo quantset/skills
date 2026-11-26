@@ -57,7 +57,14 @@ When you ask your agent to analyze **any of the other 90,000+ global symbols**, 
 zip -r /tmp/quantset-plugin.zip plugin.json mcp.json assets skills
 ```
 
-- **Agent MCP Setup Guide:** [api.quantset.dev/agents.md](https://api.quantset.dev/agents.md)
-- **Autonomous Agent Signup Spec:** [api.quantset.dev/skill.md](https://api.quantset.dev/skill.md)
-- **Full REST & MCP Contract:** [api.quantset.dev/llms-full.txt](https://api.quantset.dev/llms-full.txt)
+- **Homepage & Pricing:** [https://quantset.dev](https://quantset.dev)
+- **Financial Data MCP Server Guide:** [https://quantset.dev/docs/guides/financial-data-mcp-server](https://quantset.dev/docs/guides/financial-data-mcp-server)
+- **SEC EDGAR & XBRL Financial Statements API:** [https://quantset.dev/docs/guides/sec-edgar-xbrl-api](https://quantset.dev/docs/guides/sec-edgar-xbrl-api)
+- **Form 13F Institutional Holdings & Form 4 Insiders API:** [https://quantset.dev/docs/guides/13f-insider-float-api](https://quantset.dev/docs/guides/13f-insider-float-api)
+- **Analyst Consensus Estimates & Price Targets API:** [https://quantset.dev/docs/guides/analyst-estimates-upgrades-api](https://quantset.dev/docs/guides/analyst-estimates-upgrades-api)
+- **ETF Holdings (4,899 Funds) & U.S. Treasury Yield Curve API:** [https://quantset.dev/docs/guides/etf-holdings-treasury-yield-api](https://quantset.dev/docs/guides/etf-holdings-treasury-yield-api)
+- **Global Stock Data API (67 Countries):** [https://quantset.dev/docs/global-markets](https://quantset.dev/docs/global-markets)
+- **Agent MCP Setup Guide:** [https://api.quantset.dev/agents.md](https://api.quantset.dev/agents.md)
+- **Autonomous Agent Signup Spec:** [https://api.quantset.dev/skill.md](https://api.quantset.dev/skill.md)
+- **Full REST & MCP Contract:** [https://api.quantset.dev/llms-full.txt](https://api.quantset.dev/llms-full.txt)
 
