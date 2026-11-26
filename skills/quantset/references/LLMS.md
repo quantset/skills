@@ -27,9 +27,9 @@ curl 'https://api.quantset.dev/api/v1/prices?ticker=NVDA&limit=5' -H 'X-API-Key:
 =IMPORTDATA("https://api.quantset.dev/api/v1/screener?min_market_cap_b=10&limit=20&format=csv&apikey=YOUR_DATA_ONLY_KEY")
 ```
 
-## Budget a workflow
+## Credits and receipts
 
-Discover the active card with GET https://api.quantset.dev/api/v1/billing/rate-card. POST /api/v1/billing/estimate with a method, path and params or body to calculate maximum_credits before the data call. Estimates are free. A rows tariff settles against the collection rows actually returned.
+Every operation's price is on the rate card at GET https://api.quantset.dev/api/v1/billing/rate-card. A rows tariff settles against the collection rows actually returned.
 Set X-Max-Credits on the data request to cap its charge. Pass X-Workflow-Id to group related calls. Read X-Credit-Cost and X-Rate-Card-Version from the receipt. A 402 costs zero and reports the required_credits or maximum_credits separately from credits_remaining. SDK pagination supports a cumulative budget.
 
 ## Recover from an error
@@ -1825,7 +1825,6 @@ curl -X POST 'https://api.quantset.dev/api/v1/feedback' -H 'X-API-Key: mw_demo' 
 ### Read-only tools
 
 - `get_rate_card` Get the published credit rate card
-- `estimate_credit_cost` Estimate maximum credits for an operation
 - `get_capabilities` Get market coverage and status
 - `list_instruments` Find market instruments
 - `get_quotes` Get latest quotes
