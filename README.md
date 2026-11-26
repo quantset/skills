@@ -1,6 +1,6 @@
 # QuantSet — Buyside Quant & Equity Research Desk for Claude Code, Cursor & Codex
 
-**Stop letting your AI agent hallucinate balance sheets from Google Search or crash on rate-limited `yfinance` scrapers.**
+**Give your coding agent direct access to primary-source SEC EDGAR XBRL filings, 67 global equity markets, 4,899 ETF look-throughs, Wall Street consensus estimates, and live U.S. Treasury curves.**
 
 Turn **Claude Code**, **Cursor**, **OpenAI Codex**, **Windsurf**, **Hermes**, and **OpenClaw** into an institutional buyside research & quantitative analytics desk in one command. Powered by **[QuantSet](https://quantset.dev)**: **90,000+ global listings across 67 countries**, **64 years of survivorship-checked US stock history (1962–present; S&P 500 to 1927)**, **127M+ reconciled SEC EDGAR XBRL facts (`10-K`, discrete quarterly `10-Q`, `Form 13F`, `Form 4` w/ Rule 10b5-1 flags)**, **4,899 ETF look-through holdings (`175k+` N-PORT constituents)**, **Wall Street consensus estimates**, **40-factor point-in-time stock screening**, **734 crypto pairs**, **42 ECB FX currencies**, and **live 1M–30Y U.S. Treasury / TIPS / FRED macroeconomic curves**.
 
