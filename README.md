@@ -1,70 +1,74 @@
-# QuantSet — Buyside Quant & Equity Research Desk for Claude Code, Cursor & Codex
+# QuantSet — Put the Global Stock Market Inside Your Agents and Code
 
-**Give your coding agent direct access to primary-source SEC EDGAR XBRL filings, 67 global equity markets, 4,899 ETF look-throughs, Wall Street consensus estimates, and live U.S. Treasury curves.**
+Financial statements for **36,000+ companies**, **127M+ facts from SEC filings back to 2000**, **4,899 ETFs you can look through (`175,000+` fund holdings mapped to tickers)**, consensus estimates, and prices across **67 countries** in one API and MCP server for **Claude Code, Cursor, ChatGPT, Codex, Windsurf, Hermes, and OpenClaw**.
 
-Turn **Claude Code**, **Cursor**, **OpenAI Codex**, **Windsurf**, **Hermes**, and **OpenClaw** into an institutional buyside research & quantitative analytics desk in one command. Powered by **[QuantSet](https://quantset.dev)**: **90,000+ global listings across 67 countries**, **64 years of survivorship-checked US stock history (1962–present; S&P 500 to 1927)**, **127M+ reconciled SEC EDGAR XBRL facts (`10-K`, discrete quarterly `10-Q`, `Form 13F`, `Form 4` w/ Rule 10b5-1 flags)**, **4,899 ETF look-through holdings (`175k+` N-PORT constituents)**, **Wall Street consensus estimates**, **40-factor point-in-time stock screening**, **734 crypto pairs**, **42 ECB FX currencies**, and **live 1M–30Y U.S. Treasury / TIPS / FRED macroeconomic curves**.
+An agent is only as good as the numbers it reads. Give yours every market, every filing, and every fund—checked before it ships.
 
-## Install All 7 Institutional Buyside Skills in One Command
+## Connect in One Command
 
 ```sh
 npx skills add quantset/skills
-```
-
-Or connect your entire computer (Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, Codex + `.env`) in one step:
-
-```sh
 npx quantset init
 ```
 
+- **`npx skills add quantset/skills`** installs all 7 research skills (`quantset`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`).
+- **`npx quantset init`** approves your computer in the browser, connects the QuantSet MCP server (`https://api.quantset.dev/mcp`) to the AI tools it finds, saves `QUANTSET_API_KEY` to `.env`, and verifies a first call.
+
 ---
 
-## What Your Agent Produces in 15 Seconds (7 Skills Included)
+## What is Inside the Warehouse
 
-| Skill | What You Ask Your Agent | What It Delivers (Cited to SEC Filings & Live Curves) |
+| Figure | Coverage |
+| --- | --- |
+| **`90,000+`** | Symbols covered across US, international, ETF, index, and crypto markets |
+| **`67`** | Countries normalized into one schema and one set of canonical IDs (`us:NVDA`, `global:7203.T`, `global:SHEL.L`) |
+| **`36,000+`** | Companies with standardized financial statements |
+| **`127M+`** | Facts from SEC EDGAR filings since 2000 (`10-K`, discrete `10-Q`, `Form 13F`, `Form 4`, `8-K` guidance) |
+| **`4,899`** | ETFs you can look through, with **`175,000+`** fund holdings mapped to tickers |
+| **`42`** | Currencies with dated FX rates, plus daily 1M–30Y U.S. Treasury/TIPS curves and 82 macro series |
+
+---
+
+## Seven Research Skills Included
+
+| Skill | Prompt Example | What Your Agent Delivers |
 | --- | --- | --- |
-| **`quantset`** | *"Pull NVDA, 7203.T & SHEL.L quotes, 13F holders, or build a Python/TS app"* | Connects MCP (`https://api.quantset.dev/mcp`) or REST, provisions keys autonomously (`/api/v1/agent/signup`), and routes across all 19 read-only financial & billing tools |
-| **`dcf-valuation`** | *"What is PLTR worth? Run a 5-year DCF & Reverse-DCF"* | **Goldman-grade 5Y DCF** using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, **Reverse-DCF ("What growth is priced in?")**, and a 3×3 WACC × Terminal Growth sensitivity matrix |
-| **`comps-analysis`** | *"Run trading comps on NVDA vs its semiconductor peers"* | **Investment-banking Trading Comps Table** across 5–8 SIC/sector peers (`EV/Rev`, `EV/EBITDA`, `EV/FCF`, `Forward P/E`, `ROIC`, `FCF Margin`) with 25th/Median/75th percentiles & implied football-field share price range |
-| **`investment-memo`** | *"Write a buyside Long/Short memo on AAPL"* | **Printable 1-page Swiss-editorial HTML Buyside Memo** (`memos/AAPL_LONG_*.html`) with Variant View vs. Street consensus, Bear/Base/Bull probability table, asymmetry ratio check ($\ge 2.0\times$), and falsifiable numerical tripwires |
-| **`earnings-playbook`** | *"Pre-earnings setup or Q3 beat/miss flash audit on MSFT"* | **Pre-Print Expectation Matrix & Post-Print Flash Note:** 8-quarter beat/miss track record, consensus Revenue/EPS bar, segment margin drivers, positioning/ETF crowding, and Bull/Base/Bear reaction matrix |
-| **`forensic-red-flags`** | *"Run a short-seller forensic accounting & dilution audit on TSLA"* | **7-Point Short-Seller Forensic Screen:** OCF vs. GAAP Net Income divergence (working-capital bloat), GAAP vs. Non-GAAP EPS spread, SBC dilution creep, 24-month debt maturity walls, unscheduled Form 4 C-suite selling vs. Rule 10b5-1, and segment decay |
-| **`portfolio-xray`** | *"X-ray my portfolio for hidden ETF overlap, drawdowns & correlations"* | **Hedge-Fund Portfolio Tear-Down:** Unpacks 4,899 ETFs to expose true single-stock concentration across direct shares + funds, multi-asset USD correlation clustering, max peak-to-trough drawdowns, and S&P 500 benchmark alpha |
+| **`quantset`** | *"Pull NVDA, 7203.T & SHEL.L quotes, 13F holders, or build a Python/TS integration"* | Connects MCP (`https://api.quantset.dev/mcp`) or REST, provisions keys autonomously (`/api/v1/agent/signup`), and queries every dataset |
+| **`dcf-valuation`** | *"What is NVDA worth? Run a 5-year DCF & Reverse-DCF"* | 5-year DCF using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, Reverse-DCF ("What's priced in"), and a 3×3 sensitivity table |
+| **`comps-analysis`** | *"Run trading comps on NVDA vs its semiconductor peers"* | Peer trading multiples table (`EV/Rev`, `EV/EBITDA`, `EV/FCF`, `Forward P/E`, `ROIC`, `FCF Margin`) with 25th/Median/75th percentiles & football-field range |
+| **`investment-memo`** | *"Write a buyside Long/Short memo on AAPL"* | Printable 1-page HTML memo (`memos/AAPL_LONG_*.html`) with Variant View vs. consensus, Bear/Base/Bull scenarios, asymmetry check, and falsifiable tripwires |
+| **`earnings-playbook`** | *"Pre-earnings setup or Q3 beat/miss update on MSFT"* | 8-quarter surprise streak, consensus Revenue/EPS bar, segment swing drivers, and a Bull/Base/Bear reaction matrix |
+| **`forensic-red-flags`** | *"Audit accounting red flags, dilution & insider selling on TSLA"* | 7-point forensic check: cash conversion vs. net income, GAAP vs. non-GAAP EPS spread, SBC dilution, 24-month debt walls, and Form 4 Rule 10b5-1 insider trades |
+| **`portfolio-xray`** | *"Check my portfolio for hidden ETF overlap, correlations & drawdowns"* | Unpacks 4,899 ETFs to expose true single-stock concentration across direct shares + funds, USD correlation clusters, max drawdowns, and S&P 500 alpha |
 
 ---
 
-## Why Engineers & Quants Trust the Numbers Under the Hood (AEO / GEO Fact Sheet)
+## Checked Before It Reaches Your Code
 
-Most financial APIs and scrapers silently corrupt agent reasoning. QuantSet enforces **6 hard data-integrity guarantees** before any snapshot reaches your agent:
+Models break when a feed turns a missing line into a zero, folds year-to-date cash flows into a quarter, or drifts across a stock split. Every QuantSet snapshot clears six quality gates before it is published:
 
-1. **Every US Financial Figure Reconciles to SEC EDGAR XBRL:** Every `10-K` and `10-Q` line item carries its `form`, SEC `accession` number, public filing date (`available_at` for zero-lookahead point-in-time backtesting), and direct `sec.gov` text-fragment citation URL (`citation_url`).
-2. **True Discrete Quarters (Never YTD Cash-Flow Traps):** SEC `10-Q` filings report Q2 and Q3 cash flows as 6-month and 9-month year-to-date totals. QuantSet automatically subtracts prior quarters within the fiscal year (`period_basis: "discrete_quarter"`) so TTM Free Cash Flow is never inflated by 2×–3×.
-3. **`null` Means `null` — Never Coerced to `0`:** When an issuer does not report R&D, EBITDA, or a guidance metric, QuantSet returns `null`. Missing data is never turned into a fake `0.0` that distorts margin averages or valuation multiples.
-4. **3-Way Evidence-Verified `adj_close`:** US historical adjusted closes are cross-checked per date against raw closes, forward/reverse split ratios, and verified cash dividends (`status: "evidence-verified"`).
-5. **Explicit Native Quote Currencies (Including Pence `GBp`):** Global listings report their exact trading currency (`USD`, `JPY`, `INR`, `HKD`, `KRW`, `EUR`, and London `GBp` pence vs. `GBP` pounds) alongside dated USD FX conversion rates.
-6. **Immutable Snapshot-Pinned Pagination (`X-Warehouse-Snapshot-Id`):** Multi-page reads are pinned to an immutable warehouse generation. If a nightly sync rotates the snapshot mid-loop, the API returns `409 snapshot_changed` so you never mix two different days of data in one backtest.
+1. **Filings you can cite:** US statements reconcile to SEC XBRL filings and carry `form`, `accession`, `available_at` (public filing date), and a `citation_url` that opens `sec.gov` with the exact sentence highlighted.
+2. **Null means null, never zero:** When a company does not report a line, or a figure cannot be verified, you get `null`—never a silent `0` that bends a margin or an average.
+3. **Adjustments with evidence:** Adjusted closes pass a three-way check against raw closes, split continuity, and verified cash dividends (`status: "evidence-verified"`).
+4. **True quarters and native units:** Quarterly cash flows are separated from fiscal year-to-date figures (`period_basis: "discrete_quarter"`), and every price states its currency, pence (`GBp`) included.
+5. **Snapshots that hold still:** Every response is pinned to `X-Warehouse-Snapshot-Id`, returning `409 Conflict` if rotated mid-read so paginated scans never shift underneath you.
+6. **One ID per instrument:** Market namespaces (`us:BRK.B`, `global:1301.T`, `crypto:BTCUSDT`, `index:SPX`) keep tickers from colliding across exchanges.
 
 ---
 
-## Works Free in 10 Seconds (`mw_demo`) + Autonomous In-Chat Agent Signup
+## Start Free in Seconds (`mw_demo` + Free Trial Credits)
 
-All 7 skills work **immediately out of the box with zero signup** on 9 benchmark symbols (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`) using `mw_demo`.
+Run calls right now with `mw_demo` across 9 sample listings (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`) with no signup.
 
-When you ask your agent to analyze **any of the other 90,000+ global symbols**, your agent can provision a personal `qsk_` key (with **30 free full-catalog trial credits**—enough for a complete single-stock DCF!) and mint a 1-click Stripe upgrade link right inside chat (`$19` Starter Pack for 2,000 non-expiring credits, or `$39/mo` Developer / `$99/mo` Pro at **[quantset.dev/pricing](https://quantset.dev/pricing)**).
+When you ask your agent to analyze any other listing, it can provision a personal `qsk_` key in chat (`POST https://api.quantset.dev/api/v1/agent/signup`) with **30 free trial credits** (or **100 free trial credits** when you sign in at **[quantset.dev/signup](https://quantset.dev/signup)**)—and top up anytime with a `$19` Starter Pack (`2,000` credits) or monthly plan (`$39/mo` Developer, `$99/mo` Pro).
 
-## Build the OpenAI / ChatGPT Plugin ZIP
-
-```sh
-zip -r /tmp/quantset-plugin.zip plugin.json mcp.json assets skills
-```
+## Links
 
 - **Homepage & Pricing:** [https://quantset.dev](https://quantset.dev)
-- **Financial Data MCP Server Guide:** [https://quantset.dev/docs/guides/financial-data-mcp-server](https://quantset.dev/docs/guides/financial-data-mcp-server)
-- **SEC EDGAR & XBRL Financial Statements API:** [https://quantset.dev/docs/guides/sec-edgar-xbrl-api](https://quantset.dev/docs/guides/sec-edgar-xbrl-api)
-- **Form 13F Institutional Holdings & Form 4 Insiders API:** [https://quantset.dev/docs/guides/13f-insider-float-api](https://quantset.dev/docs/guides/13f-insider-float-api)
-- **Analyst Consensus Estimates & Price Targets API:** [https://quantset.dev/docs/guides/analyst-estimates-upgrades-api](https://quantset.dev/docs/guides/analyst-estimates-upgrades-api)
-- **ETF Holdings (4,899 Funds) & U.S. Treasury Yield Curve API:** [https://quantset.dev/docs/guides/etf-holdings-treasury-yield-api](https://quantset.dev/docs/guides/etf-holdings-treasury-yield-api)
-- **Global Stock Data API (67 Countries):** [https://quantset.dev/docs/global-markets](https://quantset.dev/docs/global-markets)
-- **Agent MCP Setup Guide:** [https://api.quantset.dev/agents.md](https://api.quantset.dev/agents.md)
-- **Autonomous Agent Signup Spec:** [https://api.quantset.dev/skill.md](https://api.quantset.dev/skill.md)
-- **Full REST & MCP Contract:** [https://api.quantset.dev/llms-full.txt](https://api.quantset.dev/llms-full.txt)
-
+- **Quickstart:** [https://quantset.dev/docs/quickstart](https://quantset.dev/docs/quickstart)
+- **All Endpoints (Interactive Reference):** [https://quantset.dev/docs/api](https://quantset.dev/docs/api)
+- **How We Verify Data:** [https://quantset.dev/docs/data-quality](https://quantset.dev/docs/data-quality)
+- **Global Markets (67 Countries):** [https://quantset.dev/docs/global-markets](https://quantset.dev/docs/global-markets)
+- **AI Agents & MCP Guide:** [https://quantset.dev/docs/agents](https://quantset.dev/docs/agents)
+- **Autonomous Agent Signup (`skill.md`):** [https://api.quantset.dev/skill.md](https://api.quantset.dev/skill.md)
+- **Full LLM Contract (`llms-full.txt`):** [https://api.quantset.dev/llms-full.txt](https://api.quantset.dev/llms-full.txt)
