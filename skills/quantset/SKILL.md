@@ -1,6 +1,6 @@
 ---
 name: quantset
-description: Answer stock, ETF, crypto, and macro questions in Claude, Cursor, or Codex ("Is NVDA overvalued?", "Compare AAPL vs MSFT margins", "What is inside SPY?"). Query financial statements for 36,000+ companies, SEC filings back to 2000, 4,899 ETFs, consensus estimates, 40-factor stock screens, and prices across 67 countries. Free to try with mw_demo.
+description: Answer stock, ETF, crypto, FX, and macro questions in Claude, Cursor, or Codex ("Is NVDA overvalued?", "Compare AAPL vs 7203.T margins", "What is inside SPY?"). Query 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETFs, consensus estimates & 40-factor stock screens. Free to try with mw_demo + 250 free credits.
 metadata: {"clawdbot":{"emoji":"📊","os":["darwin","linux","win32"]}}
 ---
 

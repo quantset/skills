@@ -1,8 +1,10 @@
 # QuantSet — Put the Global Stock Market Inside Your Agents and Code
 
-Financial statements for **36,000+ companies**, **127M+ facts from SEC filings back to 2000**, **4,899 ETFs you can look through (`175,000+` fund holdings mapped to tickers)**, consensus estimates, and prices across **67 countries** in one API and MCP server for **Claude Code, Cursor, ChatGPT, Codex, Windsurf, Hermes, and OpenClaw**.
+**`90,000+` symbols** and **`52,000+` stocks across `67` countries** (US daily history back to **1962**; S&P 500 to **1927**), **`734` crypto pairs**, **`42` FX currencies**, **`36,000+` companies with standardized financial statements**, **`127M+` facts from SEC filings back to 2000**, **`4,899` ETFs you can look through (`175,000+` fund holdings mapped to tickers)**, Wall Street consensus estimates, 40-factor stock screening, and U.S. Treasury/FRED macro series in one API and MCP server for **Claude Code, Cursor, ChatGPT, Codex, Windsurf, Hermes, and OpenClaw**.
 
 An agent is only as good as the numbers it reads. Give yours every market, every filing, and every fund—checked before it ships.
+
+> **Free to try right now (no credit card, no signup):** Works out of the box with `mw_demo` across US (`NVDA`, `AAPL`, `MSFT`, `IVV`), London (`SHEL.L`), Tokyo (`1301.T`), Mumbai (`RELIANCE.NS`), S&P 500 (`SPX`), and Crypto (`BTCUSDT`). Want to run a DCF, peer comps, or screen on **any other ticker across 67 countries**? Run `npx quantset init` (or let your agent sign up in chat) for **up to 250 free credits** across the entire 90,000+ symbol warehouse.
 
 ## Connect in One Command
 
@@ -11,8 +13,10 @@ npx skills add quantset/skills
 npx quantset init
 ```
 
-- **`npx skills add quantset/skills`** installs all 7 research skills (`quantset`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`).
+- **`npx skills add quantset/skills`** installs all 7 research skills (`quantset`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`), 3 slash commands (`/dcf`, `/comps`, `/screen`), and the Cursor market-data routing rule.
 - **`npx quantset init`** approves your computer in the browser, connects the QuantSet MCP server (`https://api.quantset.dev/mcp`) to the AI tools it finds, saves `QUANTSET_API_KEY` to `.env`, and verifies a first call.
+- **Claude Code Plugin Marketplace:** `claude plugin marketplace add quantset/skills` then `claude plugin install quantset@quantset`
+- **Cursor Marketplace Plugin:** Install from `quantset/skills` (includes `mcp.json`, 7 skills, `/dcf`, `/comps`, `/screen` commands, and `rules/quantset-market-data.mdc`).
 
 ---
 
@@ -56,11 +60,11 @@ Models break when a feed turns a missing line into a zero, folds year-to-date ca
 
 ---
 
-## Start Free in Seconds (`mw_demo` + Free Trial Credits)
+## Start Free in Seconds (`mw_demo` + 250 Free Credits)
 
-Run calls right now with `mw_demo` across 9 sample listings (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`) with no signup.
+Run calls right now with `mw_demo` across 9 sample listings (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`) with **zero signup**.
 
-When you ask your agent to analyze any other listing, it can provision a personal `qsk_` key in chat (`POST https://api.quantset.dev/api/v1/agent/signup`) with **30 free trial credits** (or **100 free trial credits** when you sign in at **[quantset.dev/signup](https://quantset.dev/signup)**)—and top up anytime with a `$19` Starter Pack (`2,000` credits) or monthly plan (`$39/mo` Developer, `$99/mo` Pro).
+When you ask your agent to analyze any other listing across all 67 markets, it can provision a personal `qsk_` key in chat (`POST https://api.quantset.dev/api/v1/agent/signup`) with **30 free credits** right inside the conversation—or you can run `npx quantset init` / sign in at **[quantset.dev/signup](https://quantset.dev/signup)** to get **250 free credits** (~10 full DCF valuations, 16 research context bundles, or 250 stock/price queries) with no credit card required.
 
 ## Links
 

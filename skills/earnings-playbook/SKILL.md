@@ -1,6 +1,6 @@
 ---
 name: earnings-playbook
-description: Ask "Run an earnings preview on MSFT" or "How did NVDA do this quarter?" to generate an expectation setup or post-earnings beat/miss note with 8-quarter surprise history, consensus revenue/EPS bar, segment margin drivers, and a Bull/Base/Bear reaction matrix.
+description: Ask "Run an earnings preview on MSFT" or "How did NVDA do this quarter?" to generate an expectation setup or post-earnings beat/miss note across 36,000+ companies with 8-quarter surprise history, consensus revenue/EPS bar, segment margin drivers, and a Bull/Base/Bear reaction matrix. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"📅","os":["darwin","linux","win32"]}}
 ---
 

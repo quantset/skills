@@ -1,6 +1,6 @@
 ---
 name: dcf-valuation
-description: Ask "What is NVDA worth?" or "Is PLTR overvalued?" to run a 5-year Discounted Cash Flow (DCF) valuation and Reverse-DCF ("What growth is priced in?") using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, and a 3x3 sensitivity matrix.
+description: Ask "What is NVDA worth?" or "Is SHEL.L overvalued?" to run a 5-year Discounted Cash Flow (DCF) valuation and Reverse-DCF across 36,000+ US and international companies in 67 countries using live 10Y Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, and a 3x3 sensitivity matrix. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"📐","os":["darwin","linux","win32"]}}
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: forensic-red-flags
-description: Ask "Any accounting red flags or insider selling on TSLA?" to run a 7-point forensic check across cash-conversion divergence, GAAP vs. non-GAAP EPS spread, SBC dilution, 24-month debt walls, segment decay, and Form 4 Rule 10b5-1 insider trades.
+description: Ask "Any accounting red flags or insider selling on TSLA?" to run a 7-point forensic check across 36,000+ companies and 127M+ SEC filing facts: cash-conversion divergence, GAAP vs. non-GAAP EPS spread, SBC dilution, 24-month debt walls, segment decay, and Form 4 Rule 10b5-1 insider trades. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"🔍","os":["darwin","linux","win32"]}}
 ---
 

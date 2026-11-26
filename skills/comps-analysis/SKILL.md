@@ -1,6 +1,6 @@
 ---
 name: comps-analysis
-description: Ask "How does NVDA stack up against peers?" to build a Comparable Companies ("Trading Comps") valuation table across 5-8 sector/SIC peers with 25th/Median/75th percentile multiples (EV/Revenue, EV/EBITDA, EV/FCF, Forward P/E, ROIC, FCF margin) and an implied share price range.
+description: Ask "How does NVDA stack up against peers?" to build a Comparable Companies ("Trading Comps") valuation table across 52,000+ US and global stocks in 67 countries with 25th/Median/75th percentile multiples (EV/Revenue, EV/EBITDA, EV/FCF, Forward P/E, ROIC, FCF margin) and an implied share price range. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"📊","os":["darwin","linux","win32"]}}
 ---
 

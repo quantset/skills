@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "quantset",
-  "version": "0.1.0",
-  "description": "Query 52,000+ global stocks (67 countries, 64yr US history), 734 crypto pairs, 40-factor stock screens, Wall Street consensus estimates, ETF look-through weights, multi-asset correlations, Treasury/TIPS curves, and reconciled financials.",
+  "version": "0.1.7",
+  "description": "Free to try (mw_demo + 250 free credits). 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETF look-throughs, consensus estimates & 40-factor screening.",
   "author": {
     "name": "QuantSet",
     "email": "hello@quantset.dev",

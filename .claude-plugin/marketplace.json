@@ -1,0 +1,33 @@
+{
+  "name": "quantset",
+  "owner": {
+    "name": "QuantSet",
+    "email": "hello@quantset.dev",
+    "url": "https://quantset.dev"
+  },
+  "plugins": [
+    {
+      "name": "quantset",
+      "source": "./",
+      "description": "Free to try (mw_demo + 250 free credits). 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETF look-throughs, consensus estimates & 40-factor screening.",
+      "version": "0.1.7",
+      "author": {
+        "name": "QuantSet",
+        "email": "hello@quantset.dev"
+      },
+      "homepage": "https://quantset.dev",
+      "repository": "https://github.com/quantset/skills",
+      "license": "MIT",
+      "strict": false,
+      "skills": [
+        "./skills/quantset",
+        "./skills/dcf-valuation",
+        "./skills/comps-analysis",
+        "./skills/investment-memo",
+        "./skills/earnings-playbook",
+        "./skills/forensic-red-flags",
+        "./skills/portfolio-xray"
+      ]
+    }
+  ]
+}

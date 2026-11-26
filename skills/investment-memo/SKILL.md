@@ -1,6 +1,6 @@
 ---
 name: investment-memo
-description: Ask "Write a Long or Short investment memo on AAPL" to generate a printable 1-page HTML equity memo with a Variant View vs. consensus, Bear/Base/Bull scenarios, asymmetry ratio check, falsifiable tripwires, and SEC filing citations.
+description: Ask "Write a Long or Short investment memo on AAPL" to generate a printable 1-page HTML equity memo across 36,000+ US and global companies (67 countries) with a Variant View vs. consensus, Bear/Base/Bull scenarios, asymmetry ratio check, falsifiable tripwires, and SEC filing citations. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"📄","os":["darwin","linux","win32"]}}
 ---
 

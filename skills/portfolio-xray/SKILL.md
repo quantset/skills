@@ -1,6 +1,6 @@
 ---
 name: portfolio-xray
-description: Ask "Analyze my portfolio risk and ETF overlap" to unpack 4,899 ETFs for hidden single-stock concentration, compute multi-asset USD correlation matrices, measure max drawdowns, and compare benchmark alpha against the S&P 500.
+description: Ask "Analyze my portfolio risk and ETF overlap" across 90,000+ symbols (52,000+ global stocks in 67 countries, 4,899 ETFs, and 734 crypto pairs) to unpack 175,000+ ETF holdings for hidden single-stock concentration, compute multi-asset USD correlations, measure max drawdowns, and benchmark alpha vs. the S&P 500. Free to try with mw_demo.
 metadata: {"clawdbot":{"emoji":"🧭","os":["darwin","linux","win32"]}}
 ---
 

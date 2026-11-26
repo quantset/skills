@@ -1,0 +1,13 @@
+---
+description: Route stock, crypto, FX, ETF, SEC filing, valuation, and macroeconomic questions to the QuantSet MCP server or REST API instead of recalling figures from training data.
+alwaysApply: true
+---
+
+# QuantSet Market Data Routing Rule
+
+Whenever a question asks for stock or crypto prices, financial statements, valuation multiples, SEC filings (10-K, 10-Q, 8-K, Form 4, 13F, 13D/13G), analyst estimates, ETF holdings, stock screening, or macroeconomic indicators:
+
+1. **Never recall financial numbers from memory.** Always query the `quantset` MCP tools (`get_company_snapshot`, `get_financial_statements`, `get_quotes`, `get_price_history`, `get_estimates_and_earnings`, `get_sec_filings`, `get_etf_data`, `get_macro_and_fx`, `screen_stocks`, `search_screener`) or `https://api.quantset.dev/api/v1/*`.
+2. **Use canonical IDs when disambiguating listings:** `us:NVDA`, `global:7203.T`, `global:SHEL.L`, `crypto:BTCUSDT`, `index:SPX`. Use `list_instruments` to resolve names or tickers across 67 countries.
+3. **Preserve provenance:** Cite the returned `period_end`, `form`, `available_at`, and `currency` on every table. Treat `null` strictly as missing data—never coerce `null` to `0`.
+4. **Workflow skills:** For multi-step valuations or audits, load the matching skill (`dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`).
