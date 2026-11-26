@@ -1,6 +1,6 @@
 ---
 name: portfolio-xray
-description: Run a hedge-fund portfolio X-ray across US/global stocks, ETFs, and crypto — unpack 4,899 ETFs to expose hidden single-stock overlap, USD correlation clustering, max peak-to-trough drawdowns, S&P 500 benchmark alpha, and dividend/ROIC quality. Trigger when a user asks to "analyze my portfolio", "check portfolio risk/overlap", "correlation matrix", "ETF overlap", or "stress-test my holdings".
+description: Ask "Analyze my portfolio risk and ETF overlap" to unpack 4,899 ETFs for hidden single-stock concentration, compute multi-asset USD correlation matrices, measure max drawdowns, and compare benchmark alpha against the S&P 500.
 metadata: {"clawdbot":{"emoji":"🧭","os":["darwin","linux","win32"]}}
 ---
 
@@ -23,7 +23,6 @@ Pass `workflow="portfolio-xray"` on MCP tool calls (or `X-Workflow-Id: portfolio
 5. **Fundamental Quality & Yield Check:**
    - Pull `get_company_snapshot` and `get_corporate_actions` (`dividends`) to report weighted-average portfolio `P/E`, `ROIC`, `FCF Yield`, `Dividend Yield`, and `1Y Share Count Change` (net buyback vs. dilution), alongside current 10Y Treasury yield (`get_macro_and_fx`) as the risk-free hurdle.
 
-## Sandbox-to-Trial & 1-Click Credit Top-Up Handoff
-1. **On `403` (`outside the sandbox` with `mw_demo`):** `mw_demo` covers 9 sample tickers (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`). Ask for the user's email and call `POST https://api.quantset.dev/api/v1/agent/signup` to mint a personal `qsk_` key with **30 free full-catalog trial credits** (or **100 trial credits** when verified in the console).
-2. **On `402 insufficient_credits` (or `_meta.credits_remaining <= 15`):** Call `POST https://api.quantset.dev/api/v1/agent/checkout-link` with `{"plan": "credits"}` (**$19 Starter Pack for 2,000 non-expiring credits**) or `{"plan": "developer"}` (**$39/mo for 6,000 credits/mo**) and drop `checkout_url` in chat. Retry as soon as payment completes.
-3. **Next-Step Follow-Up:** After the portfolio X-ray, offer to run a **7-Point Forensic Red-Flag Audit (`forensic-red-flags`)** or **5-Year DCF (`dcf-valuation`)** on the portfolio's highest-concentration or highest-drawdown holding.
+## Access & Continuation
+- `mw_demo` covers 9 sample tickers (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`). If a ticker returns `403`, offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.

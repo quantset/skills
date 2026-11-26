@@ -1,6 +1,6 @@
 ---
 name: forensic-red-flags
-description: Run a 7-point short-seller forensic accounting, earnings-quality, SBC dilution, 24-month debt-wall, segment decay, and Form 4 Rule 10b5-1 insider-selling audit on any public company. Trigger when a user asks for "red flags", "earnings quality", "accounting check", "short thesis check", "SBC dilution", "insider selling audit", or "balance sheet risk" on a stock.
+description: Ask "Any accounting red flags or insider selling on TSLA?" to run a 7-point forensic check across cash-conversion divergence, GAAP vs. non-GAAP EPS spread, SBC dilution, 24-month debt walls, segment decay, and Form 4 Rule 10b5-1 insider trades.
 metadata: {"clawdbot":{"emoji":"🔍","os":["darwin","linux","win32"]}}
 ---
 
@@ -45,6 +45,7 @@ Execute parallel QuantSet MCP or REST calls (`get_financial_statements`, `get_es
 1. **Forensic Scorecard Table:** 1 row per check (`1–7`), Status (`CLEAN` / `WATCH` / `RED FLAG`), Key Metric, and Exact Filing Citation (`available_at` / period).
 2. **Deep-Dive Findings:** Concrete numbers on every `WATCH` or `RED FLAG` item (preserving `null` where unreported—never guessing `0`).
 3. **Questions for Management / Next 10-Q Watchlist:** 3 falsifiable line items to check on the next filing day. *(Analytical audit only — not investment advice.)*
-4. **Next-Step Follow-Up & Credit Handoff:**
-   - Offer to stress-test the valuation with a **Reverse-DCF (`dcf-valuation`)** or generate a **Printable 1-Page HTML Short/Long Memo (`investment-memo`)** incorporating these forensic flags.
-   - If `mw_demo` returned `403`, ask for the user's email and call `POST https://api.quantset.dev/api/v1/agent/signup` (`30 free trial credits`). If a call returns `402 insufficient_credits` (or `_meta.credits_remaining <= 10`), call `POST https://api.quantset.dev/api/v1/agent/checkout-link` (`{"plan": "credits"}` for **$19 / 2,000 credits** or `{"plan": "developer"}` for **$39/mo / 6,000 credits/mo**) and share `checkout_url` in chat.
+
+## Access & Continuation
+- If `mw_demo` returns `403` (`outside the sandbox`), offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.

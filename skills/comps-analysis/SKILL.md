@@ -1,6 +1,6 @@
 ---
 name: comps-analysis
-description: Build an investment-banking Comparable Companies ("Trading Comps") valuation table across 5-8 sector/SIC peers with 25th/Median/75th percentile multiples (EV/Revenue, EV/EBITDA, EV/FCF, Forward P/E, ROIC, Rule of 40, FCF margin) and an implied football-field share price range. Trigger when a user asks for "comps", "trading multiples", "peer comparison", "how does [ticker] stack up against peers", or "relative valuation".
+description: Ask "How does NVDA stack up against peers?" to build a Comparable Companies ("Trading Comps") valuation table across 5-8 sector/SIC peers with 25th/Median/75th percentile multiples (EV/Revenue, EV/EBITDA, EV/FCF, Forward P/E, ROIC, FCF margin) and an implied share price range.
 metadata: {"clawdbot":{"emoji":"📊","os":["darwin","linux","win32"]}}
 ---
 
@@ -24,7 +24,6 @@ Pass `workflow="comps-analysis"` on MCP tool calls (or `X-Workflow-Id: comps-ana
    - Apply the peer **25th–75th percentile** `EV/EBITDA`, `EV/FCF`, and `Forward P/E` multiples to the target's metrics, bridge from Implied Enterprise Value (`Implied EV - Net Debt`) to Equity Value, and divide by diluted shares.
    - Explain *why* the target deserves a premium or discount to the peer median (e.g., higher `ROIC`, faster organic growth, or cleaner SBC-adjusted FCF).
 
-## Sandbox-to-Trial & 1-Click Credit Top-Up Handoff
-1. **If a ticker returns `403` (`outside the sandbox`) on `mw_demo`:** Explain in one sentence that `mw_demo` covers the 9 sample tickers only, ask for the user's real email, and call `POST https://api.quantset.dev/api/v1/agent/signup` to provision their personal `qsk_` key with **30 free full-catalog trial credits** (or tell them to verify their email in the console for **100 free trial credits**).
-2. **If a multi-peer call returns `402 insufficient_credits` (or `_meta.credits_remaining <= 15`):** Call `POST https://api.quantset.dev/api/v1/agent/checkout-link` with `X-API-Key: <qsk_key>` and `{"plan": "credits"}` (**$19 Starter Pack for 2,000 non-expiring credits**) or `{"plan": "developer"}` (**$39/mo for 6,000 credits/mo** — $10 cheaper than the 6k one-time pack) and share `checkout_url` in chat. Once paid, retry immediately—their key upgrades in seconds.
-3. **Next-Step Follow-Up:** After delivering the comps table, offer to run a **5-Year DCF & Reverse-DCF (`dcf-valuation`)** on the cheapest/most dislocated peer or render a **1-Page Printable HTML Buyside Memo (`investment-memo`)**.
+## Access & Continuation
+- If a peer ticker returns `403` (`outside the sandbox`) on `mw_demo`, explain that `mw_demo` covers sample tickers only and offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.

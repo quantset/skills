@@ -1,6 +1,6 @@
 ---
 name: dcf-valuation
-description: Run an institutional 5-year Discounted Cash Flow (DCF) valuation and Reverse-DCF ("What growth is priced in?") powered by live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, and a 3x3 sensitivity matrix. Trigger whenever a user asks for intrinsic value, fair value, DCF, "what is [ticker] worth", implied growth priced in, or overvalued/undervalued analysis.
+description: Ask "What is NVDA worth?" or "Is PLTR overvalued?" to run a 5-year Discounted Cash Flow (DCF) valuation and Reverse-DCF ("What growth is priced in?") using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, and a 3x3 sensitivity matrix.
 metadata: {"clawdbot":{"emoji":"📐","os":["darwin","linux","win32"]}}
 ---
 
@@ -83,7 +83,7 @@ Present a clean, decision-ready Markdown report (no fluff, every figure dated an
 3. **5-Year Cash Flow Projection Table:** Year 1–5 Revenue/FCF growth, Projected FCF, Discount Factor, and Present Value.
 4. **3×3 Sensitivity Matrix:** WACC ($\text{base} - 1\%$, $\text{base}$, $\text{base} + 1\%$) × Terminal Growth ($2.0\%$, $2.5\%$, $3.0\%$).
 5. **Key Risks & Falsifiers:** 2–3 concrete operating metrics that would break the valuation. *(Not investment advice.)*
-6. **Next-Step Follow-Up & Credit Check:**
-   - Always close by offering the two highest-leverage follow-ups: *"Want me to run a **7-Peer Trading Comps Football Field** (`comps-analysis`) or a **7-Point Short-Seller Forensic & Form 4 Insider Audit** (`forensic-red-flags`) on [TICKER] next?"*
-   - **If `mw_demo` returned `403` (`outside the sandbox`):** Tell the user you can unlock this ticker right now for free—ask for their email, call `POST https://api.quantset.dev/api/v1/agent/signup` to mint a personal `qsk_` key with **30 free full-catalog trial credits**, and immediately run this DCF (`23 credits`).
-   - **If `_meta.credits_remaining <= 10` (or `X-Quota-Warning` is present) or a call returns `402 insufficient_credits`:** Call `POST https://api.quantset.dev/api/v1/agent/checkout-link` (`{"plan": "credits"}` for the **$19 / 2,000-credit Starter Pack** or `{"plan": "developer"}` for **$39/mo / 6,000 credits/mo**) and share `checkout_url` so the user can top up in 1 click without rotating their key.
+
+## Access & Continuation
+- If `mw_demo` returns `403` (`outside the sandbox`), explain that `mw_demo` covers the 9 sample tickers and offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.

@@ -1,6 +1,6 @@
 ---
 name: investment-memo
-description: Draft a printable 1-page Swiss-editorial HTML Buyside Investment Memo (Long or Short) with a Variant View vs. Street consensus, Bear/Base/Bull driver scenarios, asymmetry ratio check (>=2.0x), falsifiable thesis tripwires, Form 4/13F/ETF crowding audit, and SEC filing citations. Trigger when a user asks to "write an investment memo", "pitch [ticker]", "long/short writeup", "thesis memo", or "research memo on [ticker]".
+description: Ask "Write a Long or Short investment memo on AAPL" to generate a printable 1-page HTML equity memo with a Variant View vs. consensus, Bear/Base/Bull scenarios, asymmetry ratio check, falsifiable tripwires, and SEC filing citations.
 metadata: {"clawdbot":{"emoji":"📄","os":["darwin","linux","win32"]}}
 ---
 
@@ -59,6 +59,6 @@ Before writing the HTML file, verify:
 
 Read [references/memo-template.html](references/memo-template.html), fill every `{{slot}}` cleanly, write the finished file to `./memos/[TICKER]_[LONG|SHORT]_[YYYY-MM-DD].html`, and reply in chat with a tight 4-line summary header + the saved file path.
 
-## Sandbox-to-Trial & 1-Click Credit Top-Up Handoff
-- If `mw_demo` hits `403`, ask for the user's email and call `POST https://api.quantset.dev/api/v1/agent/signup` to mint a personal `qsk_` key with **30 free trial credits**.
-- If a call hits `402 insufficient_credits` (or `_meta.credits_remaining <= 15`), call `POST https://api.quantset.dev/api/v1/agent/checkout-link` (`{"plan": "credits"}` for **$19 / 2,000 credits** or `{"plan": "developer"}` for **$39/mo / 6,000 credits/mo**) and share `checkout_url` so the user can fund their key in 1 click.
+## Access & Continuation
+- If `mw_demo` returns `403`, offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.

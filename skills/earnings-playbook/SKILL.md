@@ -1,6 +1,6 @@
 ---
 name: earnings-playbook
-description: Generate an institutional Pre-Earnings Expectation Matrix ("What's the Bar?") or Post-Earnings Beat/Miss Flash Note with 8-quarter surprise streak, Street consensus Revenue/EPS bar, segment margin swing drivers, positioning/ETF crowding, and a Bull/Base/Bear reaction matrix. Trigger when a user asks for "earnings preview", "earnings setup", "post-earnings analysis", "how did [ticker] do this quarter", or "upcoming earnings".
+description: Ask "Run an earnings preview on MSFT" or "How did NVDA do this quarter?" to generate an expectation setup or post-earnings beat/miss note with 8-quarter surprise history, consensus revenue/EPS bar, segment margin drivers, and a Bull/Base/Bear reaction matrix.
 metadata: {"clawdbot":{"emoji":"📅","os":["darwin","linux","win32"]}}
 ---
 
@@ -21,7 +21,6 @@ Pass `workflow="earnings-playbook"` on MCP tool calls (or `X-Workflow-Id: earnin
 2. **Quality of the Beat:** Check whether an EPS beat came from genuine operating-margin expansion or low-quality tax-rate/buyback/working-capital releases (`OCF` vs. `Net Income`).
 3. **Thesis & Estimate Impact:** State clearly whether the print **strengthens, leaves intact, or breaks** the prior thesis, with updated forward multiples (`Forward P/E`, `EV/FCF`).
 
-## Sandbox-to-Trial & 1-Click Credit Top-Up Handoff
-1. **If the ticker or `/api/v1/calendar/earnings` returns `403` on `mw_demo`:** Ask for the user's real email and call `POST https://api.quantset.dev/api/v1/agent/signup` to provision their personal `qsk_` key with **30 free full-catalog trial credits**, then run the earnings setup immediately.
-2. **If a call returns `402 insufficient_credits` (or `_meta.credits_remaining <= 10`):** Call `POST https://api.quantset.dev/api/v1/agent/checkout-link` (`{"plan": "credits"}` for the **$19 / 2,000-credit Starter Pack** or `{"plan": "developer"}` for **$39/mo / 6,000 credits/mo**) and hand `checkout_url` to the user.
-3. **Next-Step Follow-Up:** After an earnings preview or post-print flash note, offer to update the stock's **5-Year DCF (`dcf-valuation`)** or check for post-earnings **Form 4 insider buying/selling (`forensic-red-flags`)**.
+## Access & Continuation
+- If the ticker or `/api/v1/calendar/earnings` returns `403` on `mw_demo`, offer to create a free trial key with the user's email via `POST https://api.quantset.dev/api/v1/agent/signup` (see `https://api.quantset.dev/skill.md`).
+- If a request returns `402` (`insufficient_credits`), mint a checkout link via `POST https://api.quantset.dev/api/v1/agent/checkout-link` and share `checkout_url` with the user.
