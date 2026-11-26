@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "quantset": {
+      "type": "http",
+      "url": "https://api.quantset.dev/mcp"
+    }
+  }
+}

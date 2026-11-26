@@ -1,10 +1,18 @@
-# QuantSet — Put the Global Stock Market Inside Your Agents and Code
+# QuantSet Skills: put the global stock market inside your agent
 
-**`90,000+` symbols** and **`52,000+` stocks across `67` countries** (US daily history back to **1962**; S&P 500 to **1927**), **`734` crypto pairs**, **`42` FX currencies**, **`36,000+` companies with standardized financial statements**, **`127M+` facts from SEC filings back to 2000**, **`4,899` ETFs you can look through (`175,000+` fund holdings mapped to tickers)**, Wall Street consensus estimates, 40-factor stock screening, and U.S. Treasury/FRED macro series in one API and MCP server for **Claude Code, Cursor, ChatGPT, Codex, Windsurf, Hermes, and OpenClaw**.
+Seven research skills and three slash commands for Claude, Cursor and Codex: DCF, comps, earnings, forensics, memos and portfolio x-ray, on live data.
 
-An agent is only as good as the numbers it reads. Give yours every market, every filing, and every fund—checked before it ships.
+**Free to start: 250 credits on signup, no card.** Sample tickers work with no signup at all.
 
-> **Free to try right now (no credit card, no signup):** Works out of the box with `mw_demo` across US (`NVDA`, `AAPL`, `MSFT`, `IVV`), London (`SHEL.L`), Tokyo (`1301.T`), Mumbai (`RELIANCE.NS`), S&P 500 (`SPX`), and Crypto (`BTCUSDT`). Want to run a DCF, peer comps, or screen on **any other ticker across 67 countries**? Run `npx quantset init` (or let your agent sign up in chat) for **up to 250 free credits** across the entire 90,000+ symbol warehouse.
+## Ask it
+
+- "Which fast-growing companies are still cheap?"
+- "How much of my portfolio is secretly one stock? I hold IVV, QQQ and SMH."
+- "Which carmaker is cheapest once you put them in one currency?"
+- "Which companies are growing revenue 20%+ with 15%+ free cash flow margins and still trade under 15x EV/FCF?"
+- "Are Nvidia insiders selling into the rally, and is it on a pre-arranged 10b5-1 plan?"
+- "Who is buying back the most stock while trading at the cheapest multiples?"
+- "Where in the AI supply chain is free cash flow growing fastest?"
 
 ## Connect in One Command
 
@@ -60,11 +68,11 @@ Models break when a feed turns a missing line into a zero, folds year-to-date ca
 
 ---
 
-## Start Free in Seconds (`mw_demo` + 250 Free Credits)
+## Start Free in Seconds (`mw_demo` + Up to 250 Free Credits)
 
 Run calls right now with `mw_demo` across 9 sample listings (`us:NVDA`, `us:AAPL`, `us:MSFT`, `us:IVV`, `global:SHEL.L`, `global:1301.T`, `global:RELIANCE.NS`, `crypto:BTCUSDT`, `index:SPX`) with **zero signup**.
 
-When you ask your agent to analyze any other listing across all 67 markets, it can provision a personal `qsk_` key in chat (`POST https://api.quantset.dev/api/v1/agent/signup`) with **30 free credits** right inside the conversation—or you can run `npx quantset init` / sign in at **[quantset.dev/signup](https://quantset.dev/signup)** to get **250 free credits** (~10 full DCF valuations, 16 research context bundles, or 250 stock/price queries) with no credit card required.
+When you ask your agent to analyze any other listing across all 67 markets, it can provision a personal `qsk_` key in chat (`POST https://api.quantset.dev/api/v1/agent/signup`) with **30 free credits** right inside the conversation—or you can run `npx quantset init` / sign in at **[quantset.dev/signup](https://quantset.dev/signup)** to get **up to 250 free credits** (~10 full DCF valuations, 16 research context bundles, or 250 stock/price queries) with no credit card required.
 
 ## Links
 
@@ -73,6 +81,7 @@ When you ask your agent to analyze any other listing across all 67 markets, it c
 - **All Endpoints (Interactive Reference):** [https://quantset.dev/docs/api](https://quantset.dev/docs/api)
 - **How We Verify Data:** [https://quantset.dev/docs/data-quality](https://quantset.dev/docs/data-quality)
 - **Global Markets (67 Countries):** [https://quantset.dev/docs/global-markets](https://quantset.dev/docs/global-markets)
+- **Google Sheets (`=QUANTSET()`), Excel & Notion Templates:** [`spreadsheets/`](spreadsheets/README.md) · [https://quantset.dev/docs/guides/google-sheets-excel-notion-stock-templates](https://quantset.dev/docs/guides/google-sheets-excel-notion-stock-templates)
 - **AI Agents & MCP Guide:** [https://quantset.dev/docs/agents](https://quantset.dev/docs/agents)
 - **Autonomous Agent Signup (`skill.md`):** [https://api.quantset.dev/skill.md](https://api.quantset.dev/skill.md)
 - **Full LLM Contract (`llms-full.txt`):** [https://api.quantset.dev/llms-full.txt](https://api.quantset.dev/llms-full.txt)

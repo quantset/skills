@@ -1,7 +1,8 @@
 {
   "name": "quantset",
+  "displayName": "QuantSet",
   "version": "0.1.7",
-  "description": "Free to try (mw_demo + 250 free credits). 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETF look-throughs, consensus estimates & 40-factor screening.",
+  "description": "Put the global stock market inside your agent. Ask \"Which fast-growing companies still trade under 15x free cash flow?\" or \"How much of my portfolio is secretly one stock?\" and get real numbers with sources. 90,000+ symbols and 52,000+ stocks across 67 countries, 734 crypto pairs, 42 currencies, financials for 36,000+ companies, 127M+ SEC filing facts, 4,899 ETFs you can look through, analyst estimates and a 40-factor screener. Includes DCF, comps and screening skills. 250 free credits on signup, no card.",
   "author": {
     "name": "QuantSet",
     "email": "hello@quantset.dev",
@@ -10,19 +11,22 @@
   "homepage": "https://quantset.dev",
   "repository": "https://github.com/quantset/skills",
   "license": "MIT",
-  "mcpServers": "../mcp.json",
-  "skills": [
-    "../skills/quantset",
-    "../skills/dcf-valuation",
-    "../skills/comps-analysis",
-    "../skills/investment-memo",
-    "../skills/earnings-playbook",
-    "../skills/forensic-red-flags",
-    "../skills/portfolio-xray"
+  "keywords": [
+    "stocks",
+    "market-data",
+    "crypto",
+    "forex",
+    "stock-screener",
+    "quantitative-finance",
+    "etf",
+    "earnings",
+    "macro",
+    "treasury-yields",
+    "financials"
   ],
-  "commands": [
-    "../commands/dcf.md",
-    "../commands/comps.md",
-    "../commands/screen.md"
-  ]
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://quantset.dev/docs/agents",
+  "supportUrl": "https://quantset.dev/support",
+  "privacyPolicyUrl": "https://quantset.dev/privacy",
+  "termsOfServiceUrl": "https://quantset.dev/terms"
 }

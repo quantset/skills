@@ -1822,7 +1822,9 @@ curl -X POST 'https://api.quantset.dev/api/v1/feedback' -H 'X-API-Key: mw_demo' 
 - The `warehouse://contract` resource contains this operation guide.
 - The sandbox aliases qs_demo and mw_demo share the same sample allowance.
 
-### Read-only tools
+### Tools
+
+Every tool reads data except `submit_feedback`, which sends a note to QuantSet.
 
 - `get_rate_card` Get the published credit rate card
 - `get_capabilities` Get market coverage and status
@@ -1844,6 +1846,7 @@ curl -X POST 'https://api.quantset.dev/api/v1/feedback' -H 'X-API-Key: mw_demo' 
 - `get_macro_and_fx` Get economic indicators and exchange rates
 - `screen_stocks` Screen stocks
 - `search_screener` Screen stocks with arbitrary statement & ratio DSL filters
+- `submit_feedback` Submit missing field, data discrepancy, or API feedback
 
 ## Documentation
 

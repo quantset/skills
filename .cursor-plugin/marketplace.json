@@ -9,7 +9,7 @@
     {
       "name": "quantset",
       "source": "./",
-      "description": "Free to try (mw_demo + 250 free credits). 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETF look-throughs, consensus estimates & 40-factor screening.",
+      "description": "Put the global stock market inside your agent. Ask \"Which fast-growing companies still trade under 15x free cash flow?\" or \"How much of my portfolio is secretly one stock?\" and get real numbers with sources. 90,000+ symbols and 52,000+ stocks across 67 countries, 734 crypto pairs, 42 currencies, financials for 36,000+ companies, 127M+ SEC filing facts, 4,899 ETFs you can look through, analyst estimates and a 40-factor screener. Includes DCF, comps and screening skills. 250 free credits on signup, no card.",
       "version": "0.1.7"
     }
   ]

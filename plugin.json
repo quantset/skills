@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "quantset",
   "version": "0.1.7",
-  "description": "Free to try (mw_demo + 250 free credits). 90,000+ symbols & 52,000+ stocks across 67 countries, 734 crypto pairs, 42 FX currencies, 36,000+ companies with financial statements, 127M+ SEC filing facts, 4,899 ETF look-throughs, consensus estimates & 40-factor screening.",
+  "description": "Put the global stock market inside your agent. Ask \"Which fast-growing companies still trade under 15x free cash flow?\" or \"How much of my portfolio is secretly one stock?\" and get real numbers with sources. 90,000+ symbols and 52,000+ stocks across 67 countries, 734 crypto pairs, 42 currencies, financials for 36,000+ companies, 127M+ SEC filing facts, 4,899 ETFs you can look through, analyst estimates and a 40-factor screener. Includes DCF, comps and screening skills. 250 free credits on signup, no card.",
   "author": {
     "name": "QuantSet",
     "email": "hello@quantset.dev",
@@ -28,25 +28,28 @@
     "com.openai": {
       "interface": {
         "displayName": "QuantSet",
-        "shortDescription": "Global market & quant data",
-        "longDescription": "Analyze 52,000+ global equities across 67 countries (US history to 1962), 734 crypto pairs, 42 FX currencies, hourly bars, 40+ factor stock screens, Wall Street EPS/revenue estimates, 4,899 ETF look-through holdings, multi-asset correlations, U.S. Treasury/TIPS yield curves, 82 FRED macro series, and reconciled company financials. Read-only reference data with explicit source provenance; does not execute trades or provide investment advice.",
+        "shortDescription": "Global stocks, filings & ETFs",
+        "longDescription": "QuantSet puts the global stock market inside ChatGPT and Codex. Ask which fast-growing companies are still cheap, how much of your portfolio is really one stock, or whether insiders are selling, and get figures with their sources instead of recalled numbers.\n\nCoverage: 90,000+ symbols and 52,000+ stocks across 67 countries, 734 crypto pairs, 42 currencies, financial statements for 36,000+ companies, 127M+ facts from SEC filings since 2000, 4,899 ETFs with look-through holdings, analyst consensus estimates, a 40-factor stock screener, and US Treasury and macro series.\n\nFor investors, analysts and developers who want sourced numbers in a conversation or in code.\n\nRead-only reference data with dated sources. It does not execute trades, access brokerage accounts or provide investment advice.",
         "developerName": "QuantSet",
         "category": "Data & Analytics",
         "capabilities": [
-          "Global stock, ETF & crypto quotes and 64-year price history",
-          "40-factor equity screening, peer valuation & drawdown math",
-          "Wall Street consensus estimates, ratings & earnings surprises",
-          "ETF look-through weights, Treasury curves & FRED macro series",
-          "Reconciled company financials, revenue segments & ownership"
+          "Screen 52,000+ stocks in 67 countries on valuation, growth, margins and buybacks",
+          "Look through 4,899 ETFs to find true single-stock exposure and overlap",
+          "Read insider trades, institutional holders and segment revenue from SEC filings",
+          "Compare companies across markets in one currency with dated FX rates",
+          "Pull financial statements for 36,000+ companies, each figure linked to its filing",
+          "Track analyst estimates, ratings and earnings surprises",
+          "Price history, drawdowns and correlations for stocks, ETFs and crypto",
+          "US Treasury curves, inflation, jobs and central bank rates"
         ],
         "websiteURL": "https://quantset.dev",
         "supportURL": "https://quantset.dev/support",
         "privacyPolicyURL": "https://quantset.dev/privacy",
         "termsOfServiceURL": "https://quantset.dev/terms",
         "defaultPrompt": [
-          "Compare NVDA, AAPL, and BTCUSDT trailing returns and valuation.",
-          "What are Wall Street consensus EPS estimates for MSFT?",
-          "Show the current U.S. Treasury yield curve from 1M to 30Y."
+          "How much of IVV is Nvidia, Apple and Microsoft combined?",
+          "Compare Nvidia, Apple and Microsoft on revenue growth and margins over four years.",
+          "Is Nvidia's price running ahead of what analysts expect it to earn?"
         ],
         "brandColor": "#060913",
         "brandColorDark": "#FFB224",
@@ -56,7 +59,58 @@
       "onboardingSkill": "./skills/quantset/SKILL.md",
       "publication": {
         "countries": [],
-        "release_notes": "Initial public release with 14 read-only market, quant, consensus, ETF, macro, and company-research tools."
+        "release_notes": "Initial public release: 20 read-only tools for prices, fundamentals, estimates, ETF holdings, SEC filings, macro series and stock screening, plus one tool that sends data feedback to QuantSet."
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Latest quote for one US stock.",
+              "prompt": "What is Nvidia's latest share price?",
+              "tools_triggered": "get_quotes",
+              "expected_behavior": "Returns the latest NVDA quote in USD with its date, and states the price and the date it applies to."
+            },
+            {
+              "description": "Annual income statements from SEC filings.",
+              "prompt": "Show Apple's revenue and net income for its last four fiscal years.",
+              "tools_triggered": "get_financial_statements",
+              "expected_behavior": "Returns four annual income statements for AAPL and presents revenue and net income by fiscal year end in USD."
+            },
+            {
+              "description": "ETF look-through holdings.",
+              "prompt": "What are the ten largest holdings of the iShares Core S&P 500 ETF (IVV), with their weights?",
+              "tools_triggered": "get_etf_data",
+              "expected_behavior": "Returns IVV holdings and lists the ten largest positions with portfolio weights and the holdings date."
+            },
+            {
+              "description": "Analyst consensus estimates.",
+              "prompt": "What do analysts expect Microsoft to earn per share in its next fiscal years?",
+              "tools_triggered": "get_estimates_and_earnings",
+              "expected_behavior": "Returns consensus EPS estimates for MSFT by fiscal period and states them with the date they were compiled."
+            },
+            {
+              "description": "Daily price history.",
+              "prompt": "How has Nvidia's share price moved over the last 30 trading days?",
+              "tools_triggered": "get_price_history",
+              "expected_behavior": "Returns about 30 daily bars for NVDA and summarises the start price, end price and change over the period."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Trade execution. QuantSet is read-only reference data and cannot place orders, so no tool should run and the user should be told it cannot trade.",
+              "prompt": "Buy 10 shares of Nvidia for me at the market price."
+            },
+            {
+              "description": "Unrelated request. Weather is outside market data, so no QuantSet tool should run.",
+              "prompt": "What will the weather be in Tokyo tomorrow?"
+            },
+            {
+              "description": "Personal account data. QuantSet has no access to brokerage accounts, so no tool should run and the user should be told that.",
+              "prompt": "Show me the current balance of my brokerage account."
+            }
+          ]
+        },
+        "commerce": false
       }
     }
   }
