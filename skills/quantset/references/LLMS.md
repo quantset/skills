@@ -8,7 +8,7 @@ Dataset coverage: https://api.quantset.dev/api/v1/capabilities
 
 ## First request
 
-Use one credential: X-API-Key, Authorization: Bearer, or apikey in the query for spreadsheet reads. The sandbox key mw_demo reads documented sample listings. The operation entries below identify keyless and sample access.
+Use one credential: X-API-Key, Authorization: Bearer, or apikey in the query for spreadsheet reads. The sandbox key mw_demo reads documented sample listings. The operation entries below identify keyless and sample access. Identify your client in User-Agent. Cloudflare can reject a request before it reaches the API. A 403 with edge code 1010 can arrive as plain text or HTML. Include the Cloudflare Ray ID when reporting it.
 
 ```sh
 curl 'https://api.quantset.dev/api/v1/prices?ticker=NVDA&limit=5' -H 'X-API-Key: mw_demo'
