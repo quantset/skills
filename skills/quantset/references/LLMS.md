@@ -1608,7 +1608,7 @@ curl 'https://api.quantset.dev/api/v1/treasury?limit=30' -H 'X-API-Key: YOUR_API
 
 #### H.15 Treasury curve, real yields & spreads
 
-`GET /api/v1/macro/treasury-yields` · `get_macro_treasury_yields` · eligible API key
+`GET /api/v1/macro/treasury-yields` · `get_macro_treasury_yields` · sandbox sample key
 
 Daily Federal Reserve H.15 constant-maturity yields (1Y to 30Y), effective Fed Funds rate, 10Y-2Y and 10Y-3M curve spreads, 10Y TIPS real yield and 10Y breakeven inflation.
 
@@ -1624,7 +1624,7 @@ Daily Federal Reserve H.15 constant-maturity yields (1Y to 30Y), effective Fed F
 Response fields: `date` (string), `fed_funds_pct` (number), `yield_1y_pct` (number), `yield_2y_pct` (number), `yield_3y_pct` (number), `yield_5y_pct` (number), `yield_7y_pct` (number), `yield_10y_pct` (number), `yield_20y_pct` (number), `yield_30y_pct` (number), `spread_10y_2y_pct` (number), `spread_10y_3m_pct` (number), `real_yield_10y_pct` (number), `breakeven_10y_pct` (number)
 
 ```sh
-curl 'https://api.quantset.dev/api/v1/macro/treasury-yields?limit=10' -H 'X-API-Key: YOUR_API_KEY'
+curl 'https://api.quantset.dev/api/v1/macro/treasury-yields?limit=10' -H 'X-API-Key: mw_demo'
 ```
 
 #### List macro series
@@ -1850,6 +1850,7 @@ Every tool reads data except `submit_feedback`, which sends a note to QuantSet.
 
 ## Documentation
 
+- Integrations & Ecosystem https://quantset.dev/integrations
 - Quickstart https://quantset.dev/docs/quickstart
 - AI agents https://quantset.dev/docs/agents
 - Agent signup and checkout https://api.quantset.dev/skill.md

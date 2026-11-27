@@ -1,6 +1,6 @@
 # Sector Cost of Capital (WACC) Anchors
 
-Use the live 10-Year U.S. Treasury yield (`y10` from QuantSet `get_macro_and_fx` / `/api/v1/macro/treasury-yields`) as the risk-free rate $R_f$, then add the sector spread below as your baseline equity/unlevered cost of capital before company-specific adjustments.
+Use the live 10-Year U.S. Treasury yield (`yield_10y_pct` from QuantSet `get_macro_and_fx` / `/api/v1/macro/treasury-yields`) as the risk-free rate $R_f$, then add the sector spread below as your baseline equity/unlevered cost of capital before company-specific adjustments.
 
 | Canonical QuantSet Sector | Typical Beta ($\beta$) | Spread over 10Y Treasury | Typical USD WACC Range (at 4.0–4.5% 10Y) | Notes |
 | --- | --- | --- | --- | --- |

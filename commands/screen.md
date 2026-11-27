@@ -1,5 +1,6 @@
 ---
 description: Screen US or global equities across 67 countries by valuation multiples, revenue growth, margins, ROIC, buyback yield, and leverage.
+argument-hint: "<criteria, e.g. US tech under 20x earnings growing 15%+>"
 ---
 
 Translate the user's screening criteria (`$ARGUMENTS`) into a structured QuantSet stock screen:

@@ -21,10 +21,10 @@ npx skills add quantset/skills
 npx quantset init
 ```
 
-- **`npx skills add quantset/skills`** installs all 7 research skills (`quantset`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`), 3 slash commands (`/dcf`, `/comps`, `/screen`), and the Cursor market-data routing rule.
+- **`npx skills add quantset/skills`** installs all 8 research skills (`quantset`, `tear-sheet`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`), 3 slash commands (`/dcf`, `/comps`, `/screen`), and the Cursor market-data routing rule.
 - **`npx quantset init`** approves your computer in the browser, connects the QuantSet MCP server (`https://api.quantset.dev/mcp`) to the AI tools it finds, saves `QUANTSET_API_KEY` to `.env`, and verifies a first call.
 - **Claude Code Plugin Marketplace:** `claude plugin marketplace add quantset/skills` then `claude plugin install quantset@quantset`
-- **Cursor Marketplace Plugin:** Install from `quantset/skills` (includes `mcp.json`, 7 skills, `/dcf`, `/comps`, `/screen` commands, and `rules/quantset-market-data.mdc`).
+- **Cursor Marketplace Plugin:** Install from `quantset/skills` (includes `mcp.json`, 8 skills, `/dcf`, `/comps`, `/screen` commands, and `rules/quantset-market-data.mdc`).
 
 ---
 
@@ -41,15 +41,16 @@ npx quantset init
 
 ---
 
-## Seven Research Skills Included
+## Eight Research Skills Included
 
 | Skill | Prompt Example | What Your Agent Delivers |
 | --- | --- | --- |
-| **`quantset`** | *"Pull NVDA, 7203.T & SHEL.L quotes, 13F holders, or build a Python/TS integration"* | Connects MCP (`https://api.quantset.dev/mcp`) or REST, provisions keys autonomously (`/api/v1/agent/signup`), and queries every dataset |
+| **`quantset`** | *"Pull NVDA, 7203.T & SHEL.L quotes, 13F holders, or build a Python/TS integration"* | Connects MCP (`https://api.quantset.dev/mcp`) or REST, sets up a free key when you ask (`/api/v1/agent/signup`), and queries every dataset |
+| **`tear-sheet`** | *"Give me a one-page tear sheet on AAPL"* | Printable 1-page HTML company profile (`tearsheets/AAPL_*.html`): 5-year financial summary, valuation vs. peers, Street estimates, revenue segments, balance sheet, top holders and insider trades, every figure dated and sourced |
 | **`dcf-valuation`** | *"What is NVDA worth? Run a 5-year DCF & Reverse-DCF"* | 5-year DCF using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, Reverse-DCF ("What's priced in"), and a 3×3 sensitivity table |
 | **`comps-analysis`** | *"Run trading comps on NVDA vs its semiconductor peers"* | Peer trading multiples table (`EV/Rev`, `EV/EBITDA`, `EV/FCF`, `Forward P/E`, `ROIC`, `FCF Margin`) with 25th/Median/75th percentiles & football-field range |
 | **`investment-memo`** | *"Write a buyside Long/Short memo on AAPL"* | Printable 1-page HTML memo (`memos/AAPL_LONG_*.html`) with Variant View vs. consensus, Bear/Base/Bull scenarios, asymmetry check, and falsifiable tripwires |
-| **`earnings-playbook`** | *"Pre-earnings setup or Q3 beat/miss update on MSFT"* | 8-quarter surprise streak, consensus Revenue/EPS bar, segment swing drivers, and a Bull/Base/Bear reaction matrix |
+| **`earnings-playbook`** | *"Pre-earnings setup or Q3 beat/miss update on MSFT"* | 8-quarter surprise streak, consensus Revenue/EPS bar, segment swing drivers, and a Bull/Base/Bear reaction matrix, saved as a note plus a per-company workbook that grows each quarter |
 | **`forensic-red-flags`** | *"Audit accounting red flags, dilution & insider selling on TSLA"* | 7-point forensic check: cash conversion vs. net income, GAAP vs. non-GAAP EPS spread, SBC dilution, 24-month debt walls, and Form 4 Rule 10b5-1 insider trades |
 | **`portfolio-xray`** | *"Check my portfolio for hidden ETF overlap, correlations & drawdowns"* | Unpacks 4,899 ETFs to expose true single-stock concentration across direct shares + funds, USD correlation clusters, max drawdowns, and S&P 500 alpha |
 
