@@ -42,7 +42,7 @@ When the user asks for an analytical deliverable rather than raw data, load the 
 - Report dates, currencies, and adjustment basis alongside figures.
 - One selector per call: `get_financial_statements` takes a single `kind`, and `get_estimates_and_earnings`, `get_sec_filings`, `get_etf_data` and `get_macro_and_fx` take a single `view`. `get_financial_statements` takes many `tickers` at once.
 - `get_sec_filings` with `view="company_facts"` returns rows unordered, and each period appears in several filings: keep the row with the latest `filed` for each `period_end`.
-- `get_sec_filings` with `view="insider_transactions"` starts with the earliest years on file. Pass `start` to read a recent window.
+- `get_sec_filings` with `view="insider_transactions"` returns newest filings first (`filing_date DESC`). Pass `start` to bound the window (and `transaction_code="P,S"` when you only need open-market buys and sells).
 - `insufficient_access` covers two cases, told apart by the `detail` text: an endpoint that is "not part of the sandbox" (that dataset is outside the key in use; say what is missing and carry on) and a listing that is "outside the sandbox" (the instrument is not in the sample).
 - Spot a missing field or discrepancy? Report it for free via `POST https://api.quantset.dev/api/v1/feedback` (`6` notes/24h).
 
