@@ -3,8 +3,9 @@ description: Build a public comparable companies (trading comps) valuation table
 argument-hint: "<ticker or company name, e.g. us:NVDA>"
 ---
 
-Follow the `comps-analysis` skill for the target company (`$ARGUMENTS`). The skill holds the exact calls; this is the order of work:
+Follow the `comps-analysis` skill for the target company (`$ARGUMENTS`). The skill holds the exact calls and rules; this is the order of work:
 
-1. Pull the target's sector/industry peers using `get_peers` (or `screen_stocks` within the same sector and market-cap band) and keep 5-8 true economic peers.
-2. Pull `get_company_snapshot` for the target and each peer (enterprise value, TTM revenue, EBITDA and FCF, trailing and forward multiples), plus the target's latest quarterly income statement (`get_financial_statements` with `kind="income"`) for diluted shares.
-3. Render the side-by-side peer table (`EV/Sales`, `EV/EBITDA`, `EV/FCF`, `P/E`, revenue growth, EBITDA margin, FCF margin, Rule of 40) with 25th/Median/75th percentile benchmarks, the implied share-price football field and the Sources table. EBITDA margin is `ebitda_ttm / revenue_ttm`; Rule of 40 is `rev_growth_yoy_pct + fcf_margin_pct`.
+1. Pull the candidate peers with `get_peers` and keep 5 to 8 by the skill's rules, listing the ones dropped.
+2. Pull `get_company_snapshot` for the target and each peer, then one batched `get_financial_statements` call each for fiscal-year income (`kind="income"`), cash flow (`kind="cash_flow"`) and the balance sheet (`kind="balance_sheet"`).
+3. Run `scripts/comps_stats.py` on those figures, or apply the same rules by hand: one enterprise value per company, multiples on one fiscal-year basis, forward P/E as price over forward EPS, 25th/median/75th benchmarks and the implied share price range.
+4. Render the peer table, the benchmarks, the implied range, what limits the table, and the Sources table.

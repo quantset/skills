@@ -21,10 +21,10 @@ npx skills add quantset/skills
 npx quantset init
 ```
 
-- **`npx skills add quantset/skills`** installs all 8 research skills (`quantset`, `tear-sheet`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`), 3 slash commands (`/dcf`, `/comps`, `/screen`), and the Cursor market-data routing rule.
+- **`npx skills add quantset/skills`** installs all 10 research skills (`quantset`, `stock-screen`, `filing-research`, `tear-sheet`, `dcf-valuation`, `comps-analysis`, `investment-memo`, `earnings-playbook`, `forensic-red-flags`, `portfolio-xray`), 3 slash commands (`/dcf`, `/comps`, `/screen`), and the Cursor market-data routing rule.
 - **`npx quantset init`** approves your computer in the browser, connects the QuantSet MCP server (`https://api.quantset.dev/mcp`) to the AI tools it finds, saves `QUANTSET_API_KEY` to `.env`, and verifies a first call.
 - **Claude Code Plugin Marketplace:** `claude plugin marketplace add quantset/skills` then `claude plugin install quantset@quantset`
-- **Cursor Marketplace Plugin:** Install from `quantset/skills` (includes `mcp.json`, 8 skills, `/dcf`, `/comps`, `/screen` commands, and `rules/quantset-market-data.mdc`).
+- **Cursor Marketplace Plugin:** Install from `quantset/skills` (includes `mcp.json`, 10 skills, `/dcf`, `/comps`, `/screen` commands, and `rules/quantset-market-data.mdc`).
 
 ---
 
@@ -41,11 +41,13 @@ npx quantset init
 
 ---
 
-## Eight Research Skills Included
+## Ten Research Skills Included
 
 | Skill | Prompt Example | What Your Agent Delivers |
 | --- | --- | --- |
 | **`quantset`** | *"Pull NVDA, 7203.T & SHEL.L quotes, 13F holders, or build a Python/TS integration"* | Connects MCP (`https://api.quantset.dev/mcp`) or REST, sets up a free key when you ask (`/api/v1/agent/signup`), and queries every dataset |
+| **`stock-screen`** | *"Which large companies are growing 15%+ and still cheap on cash flow?"* | Turns the description into numeric rules, runs the screen, says how many passed and how many a rule could not judge, and checks the top five against their filings |
+| **`filing-research`** | *"What changed in Tesla's risk factors since last year?"* | Answers from the text of 10-K, 10-Q and 8-K filings with exact quotes, the item and a link; summarizes a section or compares it year over year |
 | **`tear-sheet`** | *"Give me a one-page tear sheet on AAPL"* | Printable 1-page HTML company profile (`tearsheets/AAPL_*.html`): 5-year financial summary, valuation vs. peers, Street estimates, revenue segments, balance sheet, top holders and insider trades, every figure dated and sourced |
 | **`dcf-valuation`** | *"What is NVDA worth? Run a 5-year DCF & Reverse-DCF"* | 5-year DCF using live 10Y U.S. Treasury WACC, SBC-adjusted Owner FCF, Net Debt bridge, Reverse-DCF ("What's priced in"), and a 3×3 sensitivity table |
 | **`comps-analysis`** | *"Run trading comps on NVDA vs its semiconductor peers"* | Peer trading multiples table (`EV/Rev`, `EV/EBITDA`, `EV/FCF`, `Forward P/E`, `ROIC`, `FCF Margin`) with 25th/Median/75th percentiles & football-field range |

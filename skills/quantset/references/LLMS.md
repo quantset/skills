@@ -6,6 +6,25 @@ API origin: https://api.quantset.dev
 OpenAPI 3.1: https://api.quantset.dev/openapi.json
 Dataset coverage: https://api.quantset.dev/api/v1/capabilities
 
+## Contents
+
+- First request
+- Read and interpret a data page
+- Credits and receipts
+- Recover from an error
+- Operations, each listed as `METHOD /path`, grouped under:
+  - Prices and sessions
+  - Returns, risk and historical multiples
+  - Instruments, ETFs and capabilities
+  - Fundamentals and screening
+  - Estimates, ratings and calendars
+  - Actions, ownership and SEC disclosures
+  - Regional filings and reference series
+  - Macro and FX
+  - Account and integration
+- MCP server and its tools
+- Documentation
+
 ## First request
 
 Use one credential: X-API-Key, Authorization: Bearer, or apikey in the query for spreadsheet reads. The sandbox key mw_demo reads documented sample listings. The operation entries below identify keyless and sample access. Identify your client in User-Agent. Cloudflare can reject a request before it reaches the API. A 403 with edge code 1010 can arrive as plain text or HTML. Include the Cloudflare Ray ID when reporting it.
@@ -301,7 +320,7 @@ curl 'https://api.quantset.dev/api/v1/options?ticker=us:NVDA' -H 'X-API-Key: YOU
 
 #### FINRA daily short-sale volume
 
-`GET /api/v1/short-interest` · `get_short_interest` · eligible API key
+`GET /api/v1/short-volume` · `get_short_volume` · eligible API key
 
 Official FINRA Consolidated Reg-SHO daily short volume, short-exempt volume, total volume and short_volume_ratio_pct.
 
@@ -315,7 +334,7 @@ Official FINRA Consolidated Reg-SHO daily short volume, short-exempt volume, tot
 Response fields: `instrument_id` (string), `date` (string), `short_volume` (number), `short_exempt_volume` (number), `total_volume` (number), `short_volume_ratio_pct` (number), `markets` (string)
 
 ```sh
-curl 'https://api.quantset.dev/api/v1/short-interest?ticker=us:NVDA&days=10' -H 'X-API-Key: YOUR_API_KEY'
+curl 'https://api.quantset.dev/api/v1/short-volume?ticker=us:NVDA&days=10' -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Agent research context pack
@@ -1210,7 +1229,7 @@ Reported institutional holders and ownership percentages.
 - `X-Max-Credits` (integer, optional) Refuse the request if its maximum charge exceeds this ceiling.
 - `X-Workflow-Id` (string, optional) Optional printable identifier for grouping charges in a research workflow.
 
-Response fields: `instrument_id` (string), `holder` (string), `manager_cik` (string), `year` (integer), `report_date` (string), `filing_date` (string), `shares` (number), `market_value_usd` (number), `portfolio_weight_pct` (number), `prior_shares` (number), `shares_change_qoq` (number), `shares_change_qoq_pct` (number), `position_change` (string), `pct` (number)
+Response fields: `instrument_id` (string), `holder` (string), `manager_cik` (string), `year` (integer), `report_date` (string), `filing_date` (string), `shares` (number), `market_value_usd` (number), `portfolio_weight_pct` (number), `prior_shares` (number), `shares_change_qoq` (number), `shares_change_qoq_pct` (number), `position_change` (string), `pct` (number), `accession_number` (string), `cusip` (string), `put_call` (string)
 
 ```sh
 curl 'https://api.quantset.dev/api/v1/institutional-ownership?ticker=us:NVDA&limit=25' -H 'X-API-Key: mw_demo'
@@ -1252,7 +1271,7 @@ Product and geographic revenue segment disclosures.
 - `X-Max-Credits` (integer, optional) Refuse the request if its maximum charge exceeds this ceiling.
 - `X-Workflow-Id` (string, optional) Optional printable identifier for grouping charges in a research workflow.
 
-Response fields: `instrument_id` (string), `year` (integer), `quarter` (integer), `revenue` (number)
+Response fields: `instrument_id` (string), `year` (integer), `quarter` (integer), `revenue` (number), `period` (string), `period_end` (string), `flow` (string), `axis` (string), `segment` (string), `operating_income` (number), `assets` (number), `capex` (number)
 
 ```sh
 curl 'https://api.quantset.dev/api/v1/segments?ticker=us:NVDA&limit=20' -H 'X-API-Key: mw_demo'
@@ -1271,7 +1290,7 @@ Reported debt maturity schedules.
 - `X-Max-Credits` (integer, optional) Refuse the request if its maximum charge exceeds this ceiling.
 - `X-Workflow-Id` (string, optional) Optional printable identifier for grouping charges in a research workflow.
 
-Response fields: `instrument_id` (string), `year` (integer)
+Response fields: `instrument_id` (string), `year` (integer), `y1` (number), `y2` (number), `y3` (number), `y4` (number), `y5` (number), `after5` (number), `longTermDebt` (number)
 
 ```sh
 curl 'https://api.quantset.dev/api/v1/debt-maturities?ticker=us:NVDA&limit=10' -H 'X-API-Key: mw_demo'
@@ -1290,7 +1309,7 @@ Reported proxy-statement executive compensation.
 - `X-Max-Credits` (integer, optional) Refuse the request if its maximum charge exceeds this ceiling.
 - `X-Workflow-Id` (string, optional) Optional printable identifier for grouping charges in a research workflow.
 
-Response fields: `instrument_id` (string), `year` (integer)
+Response fields: `instrument_id` (string), `year` (integer), `ceoTotalComp` (number), `ceoActuallyPaid` (number), `neoAvgTotalComp` (number), `neoAvgActuallyPaid` (number), `companyTsr` (number), `peerTsr` (number)
 
 ```sh
 curl 'https://api.quantset.dev/api/v1/executive-compensation?ticker=us:NVDA&limit=10' -H 'X-API-Key: mw_demo'
@@ -1837,12 +1856,16 @@ Every tool reads data except `submit_feedback`, which sends a note to QuantSet.
 - `get_market_status` Get current US market status
 - `get_screener_filters` Discover structured screener filters
 - `get_financial_statements` Get financial statements
+- `get_line_items` Get chosen statement line items across listings
 - `get_financial_metrics` Get historical financial ratios and efficiency metrics
 - `get_fundamentals` Get reported fundamentals
 - `get_estimates_and_earnings` Get analyst estimates and earnings
 - `get_corporate_actions` Get dividends, splits and shareholder returns
 - `get_sec_filings` Get SEC facts and ownership disclosures
+- `get_filing_documents` Find and read SEC filing text
 - `get_etf_data` Get fund profiles, holdings and exposures
+- `get_returns_and_risk` Get returns, drawdowns and correlations
+- `get_market_activity` Get options, short volume, news and market-wide quotes
 - `get_macro_and_fx` Get economic indicators and exchange rates
 - `screen_stocks` Screen stocks
 - `search_screener` Screen stocks with arbitrary statement & ratio DSL filters

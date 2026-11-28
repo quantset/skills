@@ -43,6 +43,7 @@
     .box { padding: 14px; border: 1px solid var(--line); border-radius: 8px; }
     .box h3 { margin: 0 0 6px; font: 600 13px/1.3 var(--mono); }
     footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font: 400 12px/1.5 var(--mono); color: var(--ink-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .block { color: var(--ink-2); margin: 8px 0; }
     footer a { color: inherit; }
     @media (max-width: 720px) { .grid-3 { grid-template-columns: 1fr; } }
     @media print { body { padding: 0; font-size: 12px; } }
@@ -77,10 +78,10 @@
     <ul>{{thesis_bullets}}</ul>
 
     <h2>3. Business &amp; Segment Snapshot</h2>
-    <p>{{business_snapshot}}</p>
+    <div class="block">{{business_snapshot}}</div>
 
     <h2>4. What Is Priced In vs. Street Consensus</h2>
-    <p>{{whats_priced_in}}</p>
+    <div class="block">{{whats_priced_in}}</div>
 
     <h2>5. Driver-Based Scenario Matrix (Probabilities = 100%)</h2>
     {{scenario_table}}
@@ -91,7 +92,7 @@
     </div>
 
     <h2>6. Ownership, Insiders &amp; ETF Crowding</h2>
-    <p>{{ownership_and_insiders}}</p>
+    <div class="block">{{ownership_and_insiders}}</div>
 
     <h2>7. Catalysts &amp; Observable Kill-Switch Tripwires</h2>
     {{risks_and_catalysts_table}}

@@ -1,22 +1,28 @@
-# Sector Cost of Capital (WACC) Anchors
+# Sector Discount-Rate Spreads
 
-Use the live 10-Year U.S. Treasury yield (`yield_10y_pct` from QuantSet `get_macro_and_fx` / `/api/v1/macro/treasury-yields`) as the risk-free rate $R_f$, then add the sector spread below as your baseline equity/unlevered cost of capital before company-specific adjustments.
+Add the live 10-Year U.S. Treasury yield (`yield_10y_pct` from `get_macro_and_fx` with `view="treasury_yields"`) to the midpoint of the sector's spread band. The sector names are the ones `get_company_snapshot` returns in `sector`.
 
-| Canonical QuantSet Sector | Typical Beta ($\beta$) | Spread over 10Y Treasury | Typical USD WACC Range (at 4.0–4.5% 10Y) | Notes |
-| --- | --- | --- | --- | --- |
-| Technology / Software / Semis | 1.15 – 1.45 | +5.5% to +7.0% | 9.5% – 11.5% | Semis & pre-profit SaaS sit at top of band; mega-cap net-cash platforms sit at 8.8%–9.8%. |
-| Communication Services | 1.00 – 1.25 | +4.5% to +6.0% | 8.5% – 10.5% | Telecom carriers carry higher debt weight (lower WACC, lower terminal growth 1.0–1.5%). |
-| Healthcare & Biopharma | 0.85 – 1.20 | +4.0% to +6.0% | 8.0% – 10.5% | Diversified pharma/medtech 8.0–9.0%; single-asset biotech requires probability-weighted pipeline DCF. |
-| Consumer Cyclical / Retail | 1.05 – 1.35 | +5.0% to +6.5% | 9.0% – 11.0% | Account for operating lease liabilities in Enterprise Value bridge. |
-| Consumer Defensive / Staples | 0.60 – 0.80 | +3.0% to +4.0% | 7.0% – 8.2% | Low cyclicality; cap terminal growth at 2.0–2.5%. |
-| Industrials & Aerospace | 0.95 – 1.20 | +4.5% to +5.5% | 8.5% – 9.8% | Normalize CapEx across full cycle rather than extrapolating peak/trough year. |
-| Energy & Materials | 1.05 – 1.35 | +5.0% to +6.5% | 9.0% – 11.0% | Use mid-cycle commodity FCF, never peak-cycle FCF; terminal growth 0.5–1.5%. |
-| Utilities | 0.50 – 0.70 | +2.5% to +3.5% | 6.5% – 7.8% | Regulated rate-base CapEx often makes near-term FCF negative; cross-check DDM / EV/EBITDA. |
-| Real Estate (REITs) | 0.75 – 1.00 | +3.5% to +5.0% | 7.5% – 9.2% | Do **not** use standard GAAP FCF; use `ffo_ttm` / `price_to_ffo` from QuantSet `get_company_snapshot`. |
-| Financials (Banks & Insurers) | 0.90 – 1.20 | Cost of Equity ($K_e$) | $K_e$: 9.0% – 11.5% | Debt is raw material, not capital structure—value via Excess Return / ROE-P/B model instead of EV/FCF DCF. |
+| Sector | Spread over the 10Y Treasury | Midpoint | Notes |
+| --- | --- | --- | --- |
+| Information Technology | +5.5% to +7.0% | +6.25% | Wide dispersion in outcomes; semiconductors are cyclical. |
+| Communication Services | +4.5% to +6.0% | +5.25% | Carriers have more debt and slower growth than media and platforms. |
+| Health Care | +4.0% to +6.0% | +5.0% | A single-asset biotech needs a probability-weighted pipeline model, not this one. |
+| Consumer Discretionary | +5.0% to +6.5% | +5.75% | Lease liabilities are not in the debt figure; say so for retailers. |
+| Consumer Staples | +3.0% to +4.0% | +3.5% | Low cyclicality. |
+| Industrials | +4.5% to +5.5% | +5.0% | Capital spending moves with the cycle; check the normal-year test carefully. |
+| Energy | +5.0% to +6.5% | +5.75% | Value on mid-cycle cash flow, never a peak year. Terminal growth 2.0%. |
+| Materials | +5.0% to +6.5% | +5.75% | Value on mid-cycle cash flow, never a peak year. Terminal growth 2.0%. |
+| Utilities | +2.5% to +3.5% | +3.0% | Regulated spending often makes free cash flow negative; the model may not fit. Terminal growth 2.0%. |
+| Real Estate | not applicable | | Do not use this model; value on `ffo_ttm` and `price_to_ffo`. |
+| Financials | not applicable | | Do not use this model; use a residual income or ROE against P/B approach. |
 
-## Company-Specific Adjustments (bps)
-- **Net cash > 10% of market cap & ROIC > 25%:** `-50 bps`
-- **Small-cap (< $2B market cap) or single-customer concentration > 25%:** `+100 to +150 bps`
-- **Net Debt / EBITDA > 3.5x:** `+75 to +150 bps`
-- **Non-US emerging market listing (`global:`):** Add sovereign spread over U.S. 10Y Treasury and match currency of cash flows to currency of discount rate.
+These bands are judgement, not data: they place riskier, more cyclical sectors higher. A user who has their own discount rate should give it, and then you use theirs and say so.
+
+## Adjustments
+
+Apply one only when its inputs are in the responses you have. Otherwise skip it and say it was not assessed.
+
+- **Net cash (the bridge's `cash` above its debt) with `roic_pct` above 25:** subtract 0.5 points.
+- **`market_cap_b` below 2:** add 1.0 point.
+- **Net debt above 3.5 times the latest fiscal-year `ebitda`:** add 1.0 point.
+- **A listing outside the United States:** this table adds no country risk premium and the rate is a US dollar rate. Say so, and keep cash flows and the discount rate in one currency.
