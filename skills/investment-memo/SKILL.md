@@ -39,8 +39,8 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
    - `get_company_snapshot(ticker="us:NVDA")` → `name`, `symbol`, `sector`, `latest_date`, `price`, `native_close`, `quote_currency`, `financial_currency`, `usd_rate`, `market_cap_b`, `enterprise_value_b`, `pe_ttm`, `forward_eps`, `roic_pct`, `fcf_yield_pct`, `rev_growth_yoy_pct`, `change_6m_pct`, `change_1y_pct`, `total_debt`, `cash`, `share_count_change_1y_pct`, `fundamentals_as_of`
    - `get_peers(ticker="us:NVDA", limit=8)` → `instrument_id`, `name`, `group_basis`, `market_cap_b`, `rev_growth_yoy_pct`, `roic_pct`, `pe_ttm`
 2. **Financials** (one `kind` per call):
-   - `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `currency`, `revenue`, `gross_profit`, `operating_income`, `net_income`, `ebitda`, `reported_diluted_eps`, `weighted_average_diluted_shares`, `available_at`, `accession`
-   - `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `operating_cash_flow`, `capex`, `free_cash_flow`
+   - `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `currency`, `revenue`, `gross_profit`, `operating_income`, `net_income`, `ebitda`, `reported_diluted_eps`, `weighted_average_diluted_shares`, `available_at`, `accession`
+   - `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `operating_cash_flow`, `capex`, `free_cash_flow`
    - `get_financial_statements(tickers=["us:NVDA"], kind="income", period="quarterly", limit_per_instrument=8)` → `period_end`, `period_basis`, `revenue`, `operating_income`, `net_income`
    - Keep the five newest fiscal years.
 3. **Street consensus** (one `view` per call):
@@ -52,7 +52,7 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 4. **Segments, debt, insiders, holders** (US listings only):
    - `get_sec_filings(view="segments", ticker="us:NVDA", limit=60)` → `segment`, `period`, `flow`, `revenue`
    - `get_sec_filings(view="debt_maturities", ticker="us:NVDA", limit=1)` → `year`, `y1`, `y2`, `y3`, `y4`, `y5`, `after5`
-   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", limit=1000)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `transaction_value`, `owners`, `filing_date`
+   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", transaction_code="P,S", limit=300)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `transaction_value`, `owners`, `filing_date`
    - `get_sec_filings(view="institutional_ownership", ticker="us:NVDA", limit=15)` → `holder`, `report_date`, `shares`, `market_value_usd`, `put_call`, `shares_change_qoq_pct`, `filing_date`
    - `year` on the debt row is the fiscal year of the filing, and `y1` and `y2` are the amounts due in the first and second year after it.
    - Set `start` to one year before today. Count open-market sales (`transaction_code` `S`) and buys (`P`) only; `is_10b5_1` true is scheduled, false discretionary, `null` not stated. Print the earliest and latest `transaction_date` among the rows. Leave out holder rows whose `put_call` is set. `flow` `Y` marks a full fiscal year of segment revenue and `Q` a single quarter.

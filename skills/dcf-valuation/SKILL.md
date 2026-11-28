@@ -1,6 +1,6 @@
 ---
 name: dcf-valuation
-description: "Runs a 5-year discounted cash flow (DCF) valuation from filed financial statements, with a live 10-year Treasury discount rate, SBC-adjusted owner free cash flow, a net debt bridge, a reverse DCF and a 3x3 sensitivity matrix. Use when the user asks what a stock is worth, whether a company is overvalued or undervalued, for intrinsic or fair value, or what growth the share price implies. Covers 36,000+ companies in 67 countries. Free to try with mw_demo."
+description: "Runs a Reverse-DCF and two-stage (5- or 10-year) discounted cash flow valuation from filed financial statements, leading with what today's price implies plus Bear/Base/Bull scenarios, SBC-adjusted owner FCF, a net debt bridge and a 3x3 sensitivity matrix. Use when the user asks what a stock is worth, whether a company is overvalued or undervalued, for intrinsic or fair value, or what growth the share price implies. Covers 36,000+ companies in 67 countries. Free to try with mw_demo."
 metadata: {"clawdbot":{"emoji":"📐","os":["darwin","linux","win32"]}}
 ---
 
@@ -38,18 +38,18 @@ If you can run Python, do Steps 3 to 5 with [scripts/dcf_math.py](scripts/dcf_ma
 Each call is written exactly as the QuantSet MCP tool accepts it (your client may show the tool with a prefix, such as `mcp__quantset__get_quotes`). Swap the sample instrument for the user's, and pass `workflow="dcf-valuation"` on every call (REST: header `X-Workflow-Id: dcf-valuation`). Without MCP, call the QuantSet REST API with `X-API-Key` from `QUANTSET_API_KEY`, or the sample key `mw_demo`; see `https://api.quantset.dev/skill.md`. The fields after each arrow are the ones this skill reads.
 
 1. **Price, sector, cash:** `get_company_snapshot(ticker="us:NVDA")` → `price`, `latest_date`, `quote_currency`, `financial_currency`, `market_cap_b`, `total_debt`, `cash`, `sector`, `security_type`, `roic_pct`, `share_count_change_1y_pct`, `ffo_ttm`, `price_to_ffo`
-2. **Cash flows:** `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `available_at`, `accession`, `operating_cash_flow`, `capex`, `free_cash_flow`
+2. **Cash flows:** `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `available_at`, `accession`, `operating_cash_flow`, `capex`, `free_cash_flow`
    - The newest row is the **base**: a `10-Q` row is the trailing twelve months to its `period_end`; any other row is the last fiscal year. Then keep the fiscal years (rows whose `form` is not `10-Q`), up to six.
    - `capex` is negative. If `free_cash_flow` is `null`, use `operating_cash_flow + capex`; if `capex` is `null` too, leave that year out and say so.
-3. **Revenue and EBITDA:** `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `revenue`, `ebitda`, `weighted_average_diluted_shares`
+3. **Revenue and EBITDA:** `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `revenue`, `ebitda`, `weighted_average_diluted_shares`
    - Rolling rows often carry no revenue; the fiscal-year rows do. For a trailing base, use the snapshot `revenue_ttm` as the base-period revenue.
-4. **Debt:** `get_financial_statements(tickers=["us:NVDA"], kind="balance_sheet", period="quarterly", limit_per_instrument=1)` → `period_end`, `long_term_debt`, `current_portion_long_term_debt`, `notes_payable`, `convertible_debt`, `cash_and_equivalents`
-   - Debt is the snapshot `total_debt`. When that is `null`, add up the debt lines here that have a value and say you did. If every one is `null`, stop: without debt there is no equity bridge. Do not add lease lines.
+4. **Debt:** `get_financial_statements(tickers=["us:NVDA"], kind="balance_sheet", period="quarterly", limit_per_instrument=3)` → `period_end`, `accession`, `long_term_debt`, `current_portion_long_term_debt`, `notes_payable`, `convertible_debt`, `cash_and_equivalents`
+   - Debt is the snapshot `total_debt`. When that is `null`, take the newest row here that carries an `accession` or any non-null debt line, add up the debt lines that have a value, and say you did. If every one is `null`, stop: without debt there is no equity bridge. Do not add lease lines.
    - `cash` is cash and equivalents only. Marketable securities are not in it, so net debt is overstated for a company holding a large investment portfolio; say so beside the bridge.
-5. **Diluted shares:** `get_financial_statements(tickers=["us:NVDA"], kind="income", period="quarterly", limit_per_instrument=1)` → `period_end`, `period_basis`, `weighted_average_diluted_shares`, `available_at`
-   - When the share count is empty on that row, use the latest fiscal-year row from call 3.
-6. **Stock-based compensation:** `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="ShareBasedCompensation", limit=1000)` → `value`, `period_start`, `period_end`, `form`, `filed`, `accession`
-   - Rows arrive unordered and each year appears in several filings. Keep `10-K` rows spanning a full year, take the latest `period_end`, and for that year the row with the latest `filed`.
+5. **Diluted shares:** `get_financial_statements(tickers=["us:NVDA"], kind="income", period="quarterly", limit_per_instrument=2)` → `period_end`, `period_basis`, `weighted_average_diluted_shares`, `available_at`
+   - When the share count is empty on the newest row, use the next row or the latest fiscal-year row from call 3.
+6. **Stock-based compensation:** `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="ShareBasedCompensation", start="2022-01-01", limit=200)` → `value`, `period_start`, `period_end`, `form`, `filed`, `accession`
+   - Set `start` to three years before today (rows arrive unordered by `fact_id`, so `start` guarantees the newest `10-K` full-year row is inside the window). Keep `10-K` rows spanning a full year, take the latest `period_end`, and for that year the row with the latest `filed`.
 7. **Consensus revenue:** `get_estimates_and_earnings(view="estimates", ticker="us:NVDA", metric="revenue")` → `period`, `period_end`, `consensus`, `year_ago`, `analyst_count`, `as_of`
    - FY+1 growth = this fiscal year's `consensus / year_ago - 1`. FY+2 growth = next fiscal year's `consensus` divided by this fiscal year's, minus 1. Use `analyst_count` from this fiscal year's row.
 8. **Risk-free rate ($R_f$):** `get_macro_and_fx(view="treasury_yields", limit=1)` → `date`, `yield_10y_pct`. Print its `date`; it can be several days old.
@@ -69,44 +69,38 @@ Stop and say so, without giving a value, when:
 ## Step 3: Base FCF, Owner FCF & Growth Path
 
 1. **Base FCF:** the base row from Step 1.2. State the period it covers.
-2. **Normal-year check:** compute FCF margin (`free_cash_flow / revenue`) for the 3 fiscal years before the base period. If the base is negative, or its margin differs from that 3-year median by more than 25% of the median, the base is not a normal year (often a spending surge): use `median margin × base-period revenue` instead, say so in the verdict, and treat the result as low confidence. Either way, show the value on the normal-year base beside the value on the reported base, so the reader sees how much rests on this choice.
-3. **Stale base:** if the base period ended more than 200 days before the price date (`latest_date`), say the base is stale and which way the results since then point.
-4. **SBC Discipline:** always report both FCF and **Owner FCF** (the base FCF minus the latest fiscal year's stock-based compensation, whatever period the base covers), and call it out when SBC exceeds 15% of FCF or the share count is rising (`share_count_change_1y_pct` above zero).
-5. **Year-1 Growth ($g_1$):** the average of consensus FY+1 revenue growth, consensus FY+2 revenue growth, and the historical revenue CAGR over the six newest fiscal years, capped at **18%**. Raise the cap to **22%** only when both consensus rates exceed 22% and `analyst_count` is at least 5. Few companies sustain more than that for five years; the reverse DCF shows what the market assumes instead.
-6. **Fade:** each later year grows at 87.5% of the previous year's rate (Year 2 = $g_1 \times 0.875$, and so on), never below the base-case $g_\infty$. Growth reverts toward the economy's; the user may give a different path, and then you say so.
+2. **Normal-year check (catches heavy CapEx cycles):** compute FCF margin (`free_cash_flow / revenue`) for the 3 fiscal years before the base period. If the base is negative, or its margin differs from that 3-year median by more than **15%** of the median (for example, a hyperscaler spending surge), normalize the base to `median margin × base-period revenue`, note that you normalized it, and show the unadjusted reported-base value alongside.
+3. **Stale base:** if the base period ended more than 200 days before `latest_date`, note that the base is stale.
+4. **SBC Discipline:** report both FCF and **Owner FCF** (base FCF minus the latest fiscal year's stock-based compensation), and flag when SBC exceeds 15% of FCF or `share_count_change_1y_pct` is positive.
+5. **Year-1 Growth ($g_1$) & 10-Year Smooth Fade:** average of consensus FY+1 revenue growth, consensus FY+2 revenue growth, and historical revenue CAGR over the newest fiscal years, capped at **20%** (raised to **28%** when both consensus years exceed 20% with `analyst_count` ≥ 5). Project over a **10-year** stage so durable compounders are not truncated at year 5 ($0.90\times$ annual fade when $g_1 \ge 12\%$, $0.80\times$ fade below $12\%$ so modest growers glide quickly to $g_\infty$ without a cliff jump at 12%).
+6. **Three Scenarios + Both Bases in the Lead:** alongside the Base path, compute Bear ($0.65 \times g_1$, $WACC + 0.75\%$, $g_\infty - 0.5\%$) and Bull ($\min(\max(\text{raw growth}, 1.25 \times g_1), 35\%)$, $WACC - 0.75\%$, $g_\infty + 0.5\%$). Whenever the base FCF was normalized (e.g. a CapEx surge), print **both** the normalized Base value and the unadjusted reported-base value right in the lead line so neither choice is hidden.
 
 ---
 
 ## Step 4: Discount Rate, Terminal Value & the Bridge
 
-- Find the company's `sector` in [sector-wacc.md](references/sector-wacc.md) and add the 10Y Treasury yield $R_f$ to the **midpoint** of that sector's spread band. Apply an adjustment from that file only when the data for it is on hand, and say which you applied. Treat the result as the discount rate ($WACC$).
-- **Terminal Growth ($g_\infty$):** **2.5%** by default, never above $R_f$. Use **2.0%** for `Energy`, `Materials` and `Utilities`, whose volumes track the economy. Say which you used.
-- **Formulas:**
-  - $PV_{\text{stage 1}} = \sum_{t=1}^{5} \frac{FCF_t}{(1 + WACC)^t}$
-  - $TV_5 = \frac{FCF_5 \times (1 + g_\infty)}{WACC - g_\infty}$, $\quad PV_{TV} = \frac{TV_5}{(1 + WACC)^5}$
-  - $\text{Implied EV} = PV_{\text{stage 1}} + PV_{TV}$; $\text{Equity Value} = \text{Implied EV} - \text{Net Debt}$; $\text{Fair Value / Share} = \frac{\text{Equity Value}}{\text{Diluted Shares}}$
+- Find the company's `sector` in [sector-wacc.md](references/sector-wacc.md) and add the 10Y Treasury yield $R_f$ to the **midpoint** of that sector's spread band, applying the mega-cap / net-cash / small-cap / leverage adjustments in that file when inputs are present. Treat the result as $WACC$ (unless the user gave their own rate).
+- **Terminal Growth ($g_\infty$):** **2.5%** by default (`2.0%` for `Energy`, `Materials`, `Utilities`), never above $R_f$.
+- Bridge: $PV_{\text{stage 1}} + PV_{TV} = \text{Implied EV}$; $\text{Equity Value} = \text{Implied EV} - \text{Net Debt}$; $\text{Value / Share} = \text{Equity Value} / \text{Diluted Shares}$.
 
 ---
 
 ## Step 5: Mandatory Sanity Checks (Run Before Output)
 
-1. **Terminal Value Dominance:** compute $PV_{TV} / \text{Implied EV}$. Above $82\%$, say that the value is mostly the terminal assumption.
-2. **What the Terminal Value Assumes:** state $TV_5 / FCF_5$, the multiple of year-5 cash flow the model says the company is then worth, beside the peer median price-to-FCF from Step 1.9 (`100 / fcf_yield_pct`, peers with a yield between 0 and 100 only, at least three of them). The first depends only on the discount rate and terminal growth; a market that pays far more is assuming growth lasts beyond year 5.
-3. **Reverse DCF ("What's Priced In"):** solve for the constant 5-year FCF growth, followed by $g_\infty$, that makes Fair Value / Share equal today's `price`, starting from the same base you valued.
-4. **Model Against Market:** when the model value differs from the price by more than 50% in either direction, treat the result as low confidence. A five-year model with capped growth cannot explain a gap that wide: lead the verdict with what the price implies, and do not call the stock over- or undervalued by that figure.
-5. **Sensitivity Centre:** the centre cell of the 3×3 matrix must equal the base Fair Value / Share. Every cell uses the same growth path.
+1. **Reverse DCF ("What's Priced In" — Lead Finding):** solve for the constant $N$-year FCF growth rate that makes Value / Share equal today's `price`. Compare that market-implied growth rate directly against historical revenue CAGR and consensus growth—this is a fact about the price, not an opinion.
+2. **Terminal Value & Exit Multiple:** state $PV_{TV} / \text{Implied EV}$ (flag above 82%) and $TV_N / FCF_N$ beside the peer median price-to-FCF (`100 / fcf_yield_pct`).
+3. **Model Against Market:** when Base Value / Share differs from `price` by more than 45%, do **not** declare the stock over- or undervalued off one assumption set—lead with the Reverse DCF and the Bear/Base/Bull scenarios.
+4. **Sensitivity Centre:** the centre cell of the 3×3 matrix must equal the Base Value / Share.
 
 ---
 
-## Output Structure
+## Output Structure (Keep Concise — Findings First, Caveats Last)
 
-A decision-ready Markdown report, every figure dated and currency-labelled:
-1. **Executive Verdict:** current price vs. model value (% difference), the reverse-DCF growth, the SBC-adjusted value and the normal-year value. When the result is low confidence (normalized or stale base, or a gap above 50%), lead with what the price implies.
-2. **Inputs & Provenance Table:** $R_f$ and its date, spread and adjustments, WACC, base FCF and its period, SBC, debt and where it came from, cash, diluted shares, with filing dates (`available_at`).
-3. **5-Year Cash Flow Projection Table:** Year 1–5 growth, FCF, discount factor, present value.
-4. **3×3 Sensitivity Matrix:** WACC ($\text{base} - 1\%$, $\text{base}$, $\text{base} + 1\%$) × Terminal Growth ($\text{base} - 0.5\%$, $\text{base}$, $\text{base} + 0.5\%$), so the centre cell is the base case.
-5. **Key Risks & Falsifiers:** 2–3 concrete operating metrics that would break the valuation. *(Not investment advice.)*
-6. **Sources:** see below.
+Keep the whole report tight (~60–85 lines). Lead with the findings, not disclaimers:
+1. **Top 3 Takeaways (3–4 lines max):** (a) **What's Priced In (Reverse DCF)** vs. historical/consensus growth; (b) **Bear / Base / Bull scenario range** + Owner FCF value; (c) the single biggest driver (e.g. normalized CapEx base, SBC share, or terminal multiple vs. peers).
+2. **Scenario & Key Inputs Table:** compact Bear / Base / Bull table + 1-line summary of $R_f$, $WACC$, base FCF, net debt, and diluted shares.
+3. **Cash Flow Trajectory & 3×3 Sensitivity Matrix:** stage cash flows + 3×3 WACC ($\text{base} \pm 1\%$) × Terminal Growth ($\text{base} \pm 0.5\%$) grid (centre cell = Base).
+4. **Sources & Notes (Compact Footer):** one concise `Sources` table at the bottom + 2–3 one-line caveats/falsifiers. *(Not investment advice.)*
 
 ## Sources (Required)
 

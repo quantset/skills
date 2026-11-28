@@ -53,7 +53,7 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 - Thresholds it accepts: `min_market_cap_b`, `max_pe_ttm`, `max_pe_forward`, `max_pb_ratio`, `max_ev_to_ebitda`, `max_ev_to_fcf`, `max_net_debt_to_ebitda`, `min_rev_growth_yoy`, `min_rev_growth_qoq`, `min_roic`, `min_roe`, `min_net_margin`, `min_fcf_margin`, `max_debt_to_equity`, `min_dividend_yield`, `max_share_count_change_1y`, plus `sector`, `country`, `exchange` and `asset_type`. Market cap is in billions; growth, margins and yields are in percent.
 - `namespace` is `us` or `global`. `us` means listed in the US, which includes foreign companies' depositary receipts: `security_type` tells them apart, and you say so when the user asked for US companies. `sector` takes the names in `get_capabilities` under its sector list, for example `Information Technology`; read the `sector` field, not the other classification fields on the row.
 - The response carries `total_count`: say how many companies passed, not only how many you show.
-- **A threshold drops every company that has no value for that field.** Enterprise value, ROIC and net debt can be empty, so a rule on `max_ev_to_fcf`, `min_roic` or `max_net_debt_to_ebitda` silently removes them. Run the screen once more without that rule and with `limit=500`, and count the rows where the field is empty: those companies were never judged. Report three numbers: passed, failed the rule, and could not be judged.
+- **A threshold drops every company that has no value for that field.** Enterprise value, ROIC and net debt can be empty, so a rule on `max_ev_to_fcf`, `min_roic` or `max_net_debt_to_ebitda` silently removes them. Run the screen once more without that rule and with `limit=200`, and count the rows where the field is empty: those companies were never judged. Report three numbers: passed, failed the rule, and could not be judged.
 
 **Any other line item or an explicit operator:** read the field list first, `get_screener_filters()`, then `search_screener(filters=[{"field": "market_cap", "operator": "gte", "value": 10000000000}, {"field": "revenue_growth", "operator": "gte", "value": 15}], namespace="us", limit=25)` → `instrument_id`, `name`, `sector`, `industry`, `report_period`, `filing_date`, `currency`
 - This tool has its own field names (`market_cap` in dollars, `revenue_growth`, `pe_ratio`, `return_on_invested_capital`), and its figures sit under `values` on each hit. Do not mix them with the `screen_stocks` names.
@@ -67,10 +67,11 @@ A screen finds numbers, not businesses. For the five names you will lead with:
 - **Is it really cheap?** EV / FCF sets today's enterprise value against the free cash flow of the fiscal year that ended on `cash_flow_as_of`. Say how old that is. When `free_cash_flow` is more than three times `net_income_ttm`, the cash flow is unlikely to be a normal year's: say so and give the P/E beside it.
 - Drop nothing silently. A name that passed the rules but fails this check stays in the table with the reason beside it.
 
-## Output Format
+## Output Format (Keep Concise — Survivors First, Caveats Last)
 
-1. **The Rules:** each rule as a number, marked "your rule" or "default".
-2. **How Many Passed:** `total_count`, then for a rule on an often-empty field how many failed it and how many could not be judged.
+Keep the report crisp (~50–75 lines). Lead with the survivors that held up against their filings:
+1. **Top 3 Takeaways (3–4 lines max):** how many passed (`total_count`), which of the top 5 names **held up** vs. were **undercut** on filing inspection, and one line on unjudged names if a filter skipped missing rows.
+2. **The Rules & Pass Counts:** compact 1–2 line summary of numeric thresholds (`your rule` vs `default`) + passed / failed / unjudged counts.
 3. **The List:** up to 25 names, sorted as the user asked (growth by default):
 
 | Company | Sector | Mkt Cap ($B) | Rev Growth | P/E | EV / FCF | FCF Margin | ROIC | Net Debt / EBITDA | Cash flow year ended | Figures as of |
@@ -78,9 +79,8 @@ A screen finds numbers, not businesses. For the five names you will lead with:
 
    "Figures as of" is `fundamentals_as_of`; "Cash flow year ended" is `cash_flow_as_of`.
 
-4. **Checked Names:** the top five, each marked "supported" or "undercut" with the numbers behind the verdict on growth and on cheapness.
-5. **What a Screen Cannot See:** two or three lines specific to this list (one sector dominating, stale figures, a rule that removed many unjudged companies). *(Not investment advice.)*
-6. **Sources:** see below.
+4. **Filing Check on Top 5:** one tight bullet per company marked **Supported** or **Undercut** with the quarterly/annual numbers behind it.
+5. **Sources & Scope Notes (Compact Footer):** see below + 1–2 lines on what a screen cannot see. *(Not investment advice.)*
 
 ## Sources (Required)
 

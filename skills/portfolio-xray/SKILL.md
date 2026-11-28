@@ -56,7 +56,7 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 
 ## Step 3: Hidden ETF Look-Through Overlap (`4,899` Funds)
 
-- For every fund held: `get_etf_data(ticker="us:VOO", view="holdings", limit=2000)` → `constituent_instrument_id`, `ticker`, `issuer`, `weight_pct`, `as_of`
+- For every fund held: `get_etf_data(ticker="us:VOO", view="holdings", limit=500)` → `constituent_instrument_id`, `ticker`, `issuer`, `weight_pct`, `as_of`
 - **True weight of an issuer** = its direct weight + the sum over funds of `fund weight × weight_pct / 100`. Match a fund row to a direct holding by `constituent_instrument_id`, then by `ticker`; add up share classes of one issuer.
 - **Coverage:** a fund can return fewer rows than it holds. Add up the `weight_pct` of the rows returned and print it per fund with the row count and `as_of`. Everything not covered is unattributed, so each true weight is a floor; give the unattributed share of the whole portfolio.
 - **Flag** any issuer above 15% true weight.
@@ -67,17 +67,18 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 - Risk-free hurdle: `get_macro_and_fx(view="treasury_yields", limit=1)` → `date`, `yield_10y_pct`
 - **Weighted averages** over the stocks that have a value, with the portfolio weight each average covers. Average P/E as a weighted harmonic mean (the script does this), so one very high P/E cannot dominate. A stock whose `dividend_basis` is `no_recorded_dividends` has a dividend yield of zero, not `n/a`.
 
-## Output Format
+## Output Format (Keep Concise — Findings First, Caveats Last)
 
-1. **Holdings Table**, one-year window stated above it:
+Keep the report crisp (~55–80 lines). Lead with hidden concentration and correlation clusters:
+1. **Top 3 Takeaways (3–4 lines max):** biggest hidden single-issuer look-through exposures (>15% flagged), any correlation clusters (≥ 0.85), and 1-year return/drawdown vs. the S&P 500.
+2. **Holdings Table**, one-year window stated above it:
 
 | Holding | Type | Weight | Price | Currency | 1Y Return (USD) | Max Drawdown | Volatility | vs. S&P 500 |
 |---|---|---|---|---|---|---|---|---|
 
-2. **Correlation Matrix**, with the clusters at 0.85 or more called out.
-3. **Look-Through Exposure:** top 10 issuers by true weight (direct + through funds), named, each with the funds that carry it; then each fund's coverage and `as_of`, and the unattributed share of the portfolio.
-4. **Quality & Yield:** the weighted averages and the weight each covers, beside the 10Y Treasury yield and its date.
-5. **What To Look At:** three observations, each tied to a number above. *(Not investment advice.)*
+3. **Correlation Matrix**, with clusters at 0.85 or more called out in one line.
+4. **Look-Through Exposure:** top 10 issuers by true weight (direct + through funds), each with the funds that carry it; plus 1 line on ETF coverage / unattributed share.
+5. **Quality & Yield + Compact Sources Footer:** weighted averages beside the 10Y Treasury yield, followed by the compact `Sources` table. *(Not investment advice.)*
 6. **Sources:** see below.
 
 ## Sources (Required)

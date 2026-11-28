@@ -37,8 +37,8 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
    - A company name also returns funds built on the stock. Take the company's own shares, and its `us:` listing when it has one (the filing datasets cover US listings). Ask only when two different companies match.
 2. **Header, price, valuation, balance sheet:** `get_company_snapshot(ticker="us:AAPL")` → `name`, `symbol`, `exchange`, `country`, `sector`, `industry`, `sic_description`, `employees`, `latest_date`, `price`, `native_close`, `quote_currency`, `financial_currency`, `market_cap_b`, `enterprise_value_b`, `high_52w`, `low_52w`, `change_1y_pct`, `beta`, `pe_ttm`, `forward_eps`, `current_fy_estimate_as_of`, `sic_code`, `fcf_yield_pct`, `dividend_yield_pct`, `annual_dividend`, `dividend_basis`, `roic_pct`, `roe_pct`, `total_debt`, `cash`, `share_count_change_1y_pct`, `fundamentals_as_of`, `balance_sheet_as_of`
 3. **Financial summary** (one `kind` per call):
-   - `get_financial_statements(tickers=["us:AAPL"], kind="income", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `currency`, `revenue`, `gross_profit`, `operating_income`, `net_income`, `ebitda`, `reported_diluted_eps`, `available_at`, `accession`
-   - `get_financial_statements(tickers=["us:AAPL"], kind="cash_flow", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `operating_cash_flow`, `free_cash_flow`
+   - `get_financial_statements(tickers=["us:AAPL"], kind="income", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `currency`, `revenue`, `gross_profit`, `operating_income`, `net_income`, `ebitda`, `reported_diluted_eps`, `available_at`, `accession`
+   - `get_financial_statements(tickers=["us:AAPL"], kind="cash_flow", period="annual", limit_per_instrument=10)` → `period_end`, `form`, `operating_cash_flow`, `free_cash_flow`
    - Keep the six newest fiscal years (the sixth only feeds the first growth figure).
 4. **Street estimates** (one `view` per call):
    - `get_estimates_and_earnings(view="estimates", ticker="us:AAPL", metric="revenue")` → `period`, `period_end`, `consensus`, `low`, `high`, `analyst_count`, `year_ago`, `as_of`
@@ -50,7 +50,7 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 6. **Revenue segments:** `get_sec_filings(view="segments", ticker="us:AAPL", limit=60)` → `segment`, `period`, `flow`, `revenue`
 7. **Debt schedule:** `get_sec_filings(view="debt_maturities", ticker="us:AAPL", limit=1)` → `year`, `y1`, `y2`, `y3`, `y4`, `y5`, `after5`
 8. **Top holders:** `get_sec_filings(view="institutional_ownership", ticker="us:AAPL", limit=15)` → `holder`, `report_date`, `shares`, `market_value_usd`, `pct`, `put_call`, `shares_change_qoq_pct`, `filing_date`
-9. **Insider trades, last 12 months:** `get_sec_filings(view="insider_transactions", ticker="us:AAPL", start="2025-01-15", limit=1000)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
+9. **Insider trades, last 12 months:** `get_sec_filings(view="insider_transactions", ticker="us:AAPL", start="2025-01-15", transaction_code="P,S", limit=300)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
    - Set `start` to one year before today. Without it the rows begin with the earliest years on file.
 
 ---

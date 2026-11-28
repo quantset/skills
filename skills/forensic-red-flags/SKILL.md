@@ -31,14 +31,15 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 
 Shared calls, used by several checks:
 - `get_company_snapshot(ticker="us:NVDA")` → `price`, `latest_date`, `high_52w`, `cash`, `total_debt`, `market_cap_b`, `financial_currency`
-- `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `revenue`, `net_income`, `ebitda`, `weighted_average_diluted_shares`, `available_at`, `accession`
-- `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=24)` → `period_end`, `form`, `operating_cash_flow`, `free_cash_flow`
+- `get_financial_statements(tickers=["us:NVDA"], kind="income", period="annual", limit_per_instrument=8)` → `period_end`, `form`, `revenue`, `net_income`, `ebitda`, `weighted_average_diluted_shares`, `available_at`, `accession`
+- `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="annual", limit_per_instrument=8)` → `period_end`, `form`, `operating_cash_flow`, `free_cash_flow`
 
 Keep the four newest fiscal years from each.
 
 ### 1. Cash Conversion Divergence (`OCF` & `FCF` vs. `GAAP Net Income`)
-- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="AccountsReceivableNetCurrent", limit=1000)` → `value`, `period_end`, `form`, `filed`
-- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="InventoryNet", limit=1000)` → `value`, `period_end`, `form`, `filed`
+- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="AccountsReceivableNetCurrent", start="2021-01-01", limit=200)` → `value`, `period_end`, `form`, `filed`
+- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="InventoryNet", start="2021-01-01", limit=200)` → `value`, `period_end`, `form`, `filed`
+- Set `start` to four years before today so `company_facts` filters to recent fiscal years instead of returning two decades of history.
 - **Measure:** for each of the last 3 fiscal years, operating cash flow against net income; and the growth of receivables and of inventory at the fiscal year end, each minus revenue growth, in percentage points.
 - There are three conditions: (a) operating cash flow below net income, (b) receivables growing more than 15 points faster than revenue, (c) inventory growing more than 15 points faster than revenue.
 - **`WATCH`:** any one of them holds in the latest fiscal year.
@@ -55,7 +56,8 @@ Keep the four newest fiscal years from each.
 - The data shows the gap, not its cause. Say that the reconciliation is in the earnings release.
 
 ### 3. Stock-Based Compensation (SBC) & Share-Count Creep
-- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="ShareBasedCompensation", limit=1000)` → `value`, `period_start`, `period_end`, `form`, `filed`, `accession`
+- `get_sec_filings(view="company_facts", ticker="us:NVDA", concept="ShareBasedCompensation", start="2022-01-01", limit=200)` → `value`, `period_start`, `period_end`, `form`, `filed`, `accession`
+- Set `start` to three years before today (rows arrive unordered by `fact_id`, so filtering by `start` guarantees the newest full-year `10-K` row is returned in well under 200 rows).
 - **Measure:** the latest fiscal year's SBC (the `10-K` row spanning the full year) as a share of that year's operating cash flow, free cash flow and revenue; and the change in `weighted_average_diluted_shares` between the last two fiscal years.
 - **`WATCH`:** SBC above 20% of operating cash flow; or diluted shares up more than 2%; or option exercises (insider rows with `transaction_code` `M` from check 5) since the last fiscal year end add up to more than 2% of the diluted share count, which the fiscal-year comparison cannot yet show.
 - **`RED FLAG`:** SBC above 20% of operating cash flow and diluted shares up more than 2%.
@@ -69,7 +71,7 @@ Keep the four newest fiscal years from each.
 - If the snapshot `total_debt` differs from the schedule total by more than 20%, report both and use the schedule. An empty schedule means none was found, which is not the same as no debt: `NOT ASSESSED`.
 
 ### 5. Form 4 Insider Selling: Unscheduled vs. Rule 10b5-1
-- `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", limit=1000)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `price_per_share`, `transaction_value`, `owners`, `filing_date`, `accession`
+- `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", limit=500)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `price_per_share`, `transaction_value`, `owners`, `filing_date`, `accession`
 - Set `start` to one year before today. Score only open-market sales (code `S`) and buys (code `P`). Report the other codes as counts: awards (`A`), exercises (`M`), tax withholding (`F`), gifts (`G`), other disposals (`D`).
 - A sale with `is_10b5_1` true is scheduled; false is discretionary; `null` is not stated. Print the earliest and latest `transaction_date` among the rows, because coverage can stop short of today.
 - **Measure:** discretionary sales, by insider and date; and buys.
@@ -89,7 +91,7 @@ Keep the four newest fiscal years from each.
 - Fewer than three fiscal years of `Y` rows: `NOT ASSESSED`.
 
 ### 7. Passive / Thematic ETF Crowding Risk
-- `get_etf_data(ticker="us:NVDA", view="exposures", limit=200)` → `fund_symbol`, `fund_name`, `weight_pct`, `market_value`, `as_of`
+- `get_etf_data(ticker="us:NVDA", view="exposures", limit=60)` → `fund_symbol`, `fund_name`, `weight_pct`, `market_value`, `as_of`
 - Drop rows whose `as_of` is more than a year old and rows that repeat another fund's weight to the last decimal (share classes of one fund).
 - Take the funds holding more than 15% of their assets in this stock, largest `market_value` first, five at most, and profile each: `get_etf_data(ticker="us:IVV", view="profile")` → `fund_category`, `is_leveraged_or_inverse_index`, `daily_target_multiple`, `net_assets_usd`. Skip a fund whose profile call fails and say so.
 - **Measure:** whether a leveraged or inverse fund (`is_leveraged_or_inverse_index` true, or `daily_target_multiple` other than 1) is among them.
@@ -98,17 +100,19 @@ Keep the four newest fiscal years from each.
 
 ---
 
-## Output Format
+## Output Format (Keep Concise — Findings First, Caveats Last)
 
-1. **Forensic Scorecard Table:** one row per check.
+Keep the report sharp (~60–85 lines). Lead with the findings, skip boilerplate prose on `CLEAN` checks:
+1. **Top 3 Findings (3–4 lines max):** state the count of `RED FLAG` / `WATCH` / `CLEAN` checks and highlight the most material numeric findings right at the top.
+2. **Forensic Scorecard Table:** one compact row per check.
 
 | # | Check | Status | Measure | Period | Filing or date |
 |---|---|---|---|---|---|
 
    Cite `accession` and `available_at` where the row carries them; otherwise the date the row describes.
-2. **Deep-Dive Findings:** the numbers behind every `WATCH` or `RED FLAG`, and for each the line that was crossed.
-3. **Next Filing Watchlist:** three figures to check when the next 10-Q or 10-K arrives, each with the value that would change a status. *(Analytical audit only — not investment advice.)*
-4. **Sources:** see below.
+3. **Flagged Checks Only:** 2–4 concise bullets detailing the numbers behind every `WATCH` or `RED FLAG` (do not write paragraphs for `CLEAN` checks).
+4. **Next Filing Watchlist:** three figures to check when the next 10-Q or 10-K arrives, each with the threshold that clears or triggers a flag. *(Analytical audit only — not investment advice.)*
+5. **Sources (Compact Footer):** see below.
 
 ## Sources (Required)
 

@@ -38,9 +38,9 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 5. **Positioning & Crowding Check:**
    - `get_price_history(ticker="us:NVDA", limit=91)` and `get_price_history(ticker="index:SPX", limit=91)` → `date`, `close`
    - Compute the 30-session and 90-session returns ending at the latest `close` for both, and print the dates. The latest `close` and its date are also the price in the note's header.
-   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-10-15", limit=1000)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
+   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-10-15", transaction_code="P,S", limit=250)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
    - Set `start` to 90 days before today; without it the rows begin with the earliest years on file. Count open-market sales (`transaction_code` `S`) and buys (`P`) only; the other codes are awards, exercises, gifts and tax withholding. `is_10b5_1` true is scheduled, false is discretionary, `null` is not stated. Print the earliest and latest `transaction_date` among the rows, because coverage can stop short of today.
-   - `get_etf_data(ticker="us:NVDA", view="exposures", limit=200)` → `fund_symbol`, `fund_name`, `weight_pct`, `market_value`, `as_of`
+   - `get_etf_data(ticker="us:NVDA", view="exposures", limit=60)` → `fund_symbol`, `fund_name`, `weight_pct`, `market_value`, `as_of`
    - Rows come ordered by weight, not size, and stop at 200, so large funds with a small weight can be missing; say so. Drop rows whose `as_of` is more than a year old and rows that repeat another fund's weight to the last decimal (keep the first), then show the five with the largest `market_value`.
    - **What the options market expects:** `get_market_activity(view="options", ticker="us:NVDA")` → `expiration_dates`
    - Call it again with `expiration` set to the first date after the report: `get_market_activity(view="options", ticker="us:NVDA", expiration="2026-01-30")` → `implied_move_pct`, `atm_implied_volatility_pct`, `put_call_open_interest_ratio`, `underlying_price`
@@ -49,8 +49,8 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 6. **Swing Variables:**
    - `get_sec_filings(view="segments", ticker="us:NVDA", limit=100)` → `segment`, `period`, `flow`, `revenue`
    - `flow` `Q` is a single quarter and `Y` a full fiscal year; `period` is a label for the calendar quarter the row ends in. The fiscal fourth quarter often comes only inside the `Y` row: derive it as the `Y` row minus that fiscal year's three `Q` rows, only when all three are present, and mark it derived. Segments are product lines or regions, as the company reports them, and carry revenue only; margins come from the consolidated statements.
-   - `get_financial_statements(tickers=["us:NVDA"], kind="income", period="quarterly", limit_per_instrument=24)` → `period_end`, `period_basis`, `revenue`, `cost_of_revenue`, `gross_profit`, `operating_income`, `net_income`, `reported_diluted_eps`, `available_at`, `accession`
-   - `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="quarterly", limit_per_instrument=24)` → `period_end`, `period_basis`, `operating_cash_flow`, `free_cash_flow`
+   - `get_financial_statements(tickers=["us:NVDA"], kind="income", period="quarterly", limit_per_instrument=14)` → `period_end`, `period_basis`, `revenue`, `cost_of_revenue`, `gross_profit`, `operating_income`, `net_income`, `reported_diluted_eps`, `available_at`, `accession`
+   - `get_financial_statements(tickers=["us:NVDA"], kind="cash_flow", period="quarterly", limit_per_instrument=14)` → `period_end`, `period_basis`, `operating_cash_flow`, `free_cash_flow`
    - Keep one row per quarter and the twelve newest quarters, so that eight quarters have a year-ago figure. When `gross_profit` is `null`, use `revenue - cost_of_revenue`. Cash-flow rows are often year-to-date: compare a quarter's cash flow only with another `discrete_quarter` row, or year-to-date with the same point a year earlier, and say which.
    - Name the three lines that moved most: a segment whose year-on-year growth rate changed most from the quarter before, and a margin (gross or operating) that moved most in basis points against the year-ago quarter.
 7. **Reaction Matrix, by rule:** take the median absolute `surprise_pct` from step 4 as the normal size of a surprise, and apply it as a band around the EPS `consensus` (Street basis). Every outcome lands in exactly one case: **Bull** is EPS above the band, **Base** is EPS inside it or on its edge, **Bear** is EPS below it. In each case say what revenue against its `consensus` would add or take away, and name the swing line that would cause it.
@@ -71,9 +71,9 @@ When you can write files, produce two that the user can open, check and reuse ne
 
 When you cannot write files, print the note in chat and the workbook sheets as CSV blocks under the same sheet names.
 
-### Note Layout
+### Note Layout (Keep Concise — ~60–80 Lines, Findings First)
 
-1. **Header line:** company, symbol, the quarter (`period_end` of the estimate row), report `date` and `timing` (or "reported" for an update), latest `close` and its date.
+1. **Header + Top 3 Takeaways (4 lines max):** company, symbol, quarter, report `date`/`timing`, latest `close`, followed immediately by the 3 sharpest numbers (e.g. consensus bar vs. 8Q beat rate, options-implied move vs. 30D run-up, and #1 segment swing factor).
 2. **The Bar** (preview) or **Beat / Miss** (update):
 
 | Metric | Consensus | Low – High | # Analysts | Year Ago (Street) | Reported | Variance |

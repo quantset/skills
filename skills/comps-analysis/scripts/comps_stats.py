@@ -55,10 +55,10 @@ def prepare(company):
     row = dict(company)
     fy, balance = row.get("fy") or {}, row.get("balance") or {}
     debt, source = row.get("total_debt"), "snapshot"
-    if debt is None and balance.get("long_term_debt") is not None:
+    if debt is None and any(balance.get(line) is not None for line in DEBT_LINES):
         found = [line for line in DEBT_LINES if balance.get(line) is not None]
         debt = sum(balance[line] for line in found)
-        source = "balance sheet (" + ", ".join(found) + (")" if len(found) > 1 else "; other debt lines empty, so likely understated)")
+        source = "balance sheet (" + ", ".join(found) + ")"
     row["debt"], row["debt_source"] = debt, source if debt is not None else None
     ev, row["ev_computed"] = None, False
     if row.get("enterprise_value_b") is not None:
@@ -128,6 +128,28 @@ def run(data):
     return {"target": target, "peers": peers, "benchmarks": stats, "net_debt": net_debt, "implied_price": implied, "notes": notes}
 
 
+def _rank_summary(target, stats):
+    """Lead with factual percentile positioning on multiples vs. growth/margins."""
+    parts = []
+    labels = (
+        ("pe_forward", "Fwd P/E", "x"),
+        ("ev_to_revenue", "EV/Rev", "x"),
+        ("ev_to_fcf", "EV/FCF", "x"),
+        ("rev_growth_yoy_pct", "Rev growth", "%"),
+        ("fcf_margin_pct", "FCF margin", "%"),
+        ("roic_pct", "ROIC", "%"),
+    )
+    for key, label, unit in labels:
+        tv = target.get(key)
+        s = stats.get(key) or {}
+        med = s.get("median")
+        if tv is None or med is None or (key in MULTIPLES and tv <= 0):
+            continue
+        band = "above 75th" if tv > s["p75"] else ("below 25th" if tv < s["p25"] else "near peer median")
+        parts.append(f"{label} **{tv:,.1f}{unit}** vs. peer median {med:,.1f}{unit} ({band})")
+    return "; ".join(parts[:4])
+
+
 def cell(value, suffix="", digits=1, meaningful=True):
     if value is None:
         return "n/a"
@@ -135,8 +157,12 @@ def cell(value, suffix="", digits=1, meaningful=True):
 
 
 def markdown(r):
-    out = ["| Company | Mkt Cap ($B) | EV ($B) | EV / Revenue | EV / EBIT | EV / EBITDA (FY) | EV / FCF (FY) | P/E (TTM) | Fwd P/E | Rev Growth YoY | FCF Margin (FY) | ROIC | 1Y Share Chg | Fiscal year end |",
-           "|" + "---|" * 14]
+    summary = _rank_summary(r["target"], r["benchmarks"])
+    out = []
+    if summary:
+        out += [f"**Peer positioning ({r['target'].get('instrument_id')} at {cell(r['target'].get('price'), digits=2)}):** {summary}.", ""]
+    out += ["| Company | Mkt Cap ($B) | EV ($B) | EV / Revenue | EV / EBIT | EV / EBITDA (FY) | EV / FCF (FY) | P/E (TTM) | Fwd P/E | Rev Growth YoY | FCF Margin (FY) | ROIC | 1Y Share Chg | Fiscal year end |",
+            "|" + "---|" * 14]
 
     def line(label, c):
         ev = cell(c["ev"] / 1e9 if c["ev"] is not None else None) + (" c" if c["ev_computed"] else "")
@@ -150,12 +176,12 @@ def markdown(r):
         out.append(f"| *{label} (peers)* | | | " + " | ".join(cell(b[k][q], "x") for k in MULTIPLES) + " | "
                    + " | ".join(cell(b[k][q], "%", meaningful=False) for k in OTHERS) + " | |")
     out.append("| *Peers with a value* | | | " + " | ".join(str(b[k]["n"]) for k in MULTIPLES + OTHERS) + " | |")
-    out += ["", "| Implied share price | 25th | Median | 75th |", "|---|---|---|---|"]
+    out += ["", "*Illustrative mechanical peer-multiple translation (current price " + cell(r["target"].get("price"), digits=2) + f", net debt {cell(r['net_debt'], digits=0, meaningful=False)}):*",
+            "", "| Multiple applied to target | 25th | Median | 75th |", "|---|---|---|---|"]
     for key, label in (("ev_to_ebit", "EV / EBIT (trailing)"), ("ev_to_ebitda", "EV / EBITDA (fiscal year)"),
                        ("ev_to_fcf", "EV / FCF (fiscal year)"), ("pe_forward", "Forward P/E")):
         v = r["implied_price"][key]
         out.append(f"| {label} | " + (" | ".join(f"{v[q]:,.2f}" for q in ("p25", "median", "p75")) if v else "n/a | n/a | n/a") + " |")
-    out.append(f"\nCurrent price: {cell(r['target'].get('price'), digits=2)}. Net debt in the bridge: {cell(r['net_debt'], digits=0, meaningful=False)}.")
     out += [""] + [f"- {n}" for n in r["notes"]]
     return "\n".join(out)
 

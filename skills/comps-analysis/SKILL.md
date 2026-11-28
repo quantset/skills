@@ -1,6 +1,6 @@
 ---
 name: comps-analysis
-description: "Builds a comparable companies (trading comps) table with EV/Revenue, EV/EBITDA, EV/FCF, trailing and forward P/E, growth, FCF margin and ROIC, 25th/median/75th percentile benchmarks and an implied share price range. Use when the user asks how a company compares with its peers, for trading multiples, relative valuation or a peer table. Covers 52,000+ stocks in 67 countries. Free to try with mw_demo."
+description: "Builds a comparable companies (trading comps) table with EV/Revenue, EV/EBIT, EV/EBITDA, EV/FCF, trailing and forward P/E, growth, FCF margin and ROIC, leading with peer-percentile positioning (25th/median/75th) and why the target trades at a premium or discount. Use when the user asks how a company compares with its peers, for trading multiples, relative valuation or a peer table. Covers 52,000+ stocks in 67 countries. Free to try with mw_demo."
 metadata: {"clawdbot":{"emoji":"📊","os":["darwin","linux","win32"]}}
 ---
 
@@ -49,8 +49,8 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 1. **Snapshot, one call per company, target included:** `get_company_snapshot(ticker="us:AMD")` → `price`, `latest_date`, `market_cap_b`, `enterprise_value_b`, `total_debt`, `cash`, `revenue_ttm`, `operating_income_ttm`, `fundamentals_basis`, `fundamentals_as_of`, `pe_ttm`, `forward_eps`, `rev_growth_yoy_pct`, `roic_pct`, `share_count_change_1y_pct`, `sector`, `sic_code`, `quote_currency`, `financial_currency`
 2. **Fiscal-year income, all companies in one call:** `get_financial_statements(tickers=["us:AMD", "us:NVDA", "us:AVGO"], kind="income", period="annual", limit_per_instrument=5)` → `instrument_id`, `period_end`, `form`, `currency`, `revenue`, `ebitda`, `weighted_average_diluted_shares`
 3. **Fiscal-year cash flow, all companies in one call:** `get_financial_statements(tickers=["us:AMD", "us:NVDA", "us:AVGO"], kind="cash_flow", period="annual", limit_per_instrument=5)` → `instrument_id`, `period_end`, `form`, `free_cash_flow`
-4. **Debt, all companies in one call:** `get_financial_statements(tickers=["us:AMD", "us:NVDA", "us:AVGO"], kind="balance_sheet", period="quarterly", limit_per_instrument=2)` → `instrument_id`, `period_end`, `accession`, `long_term_debt`, `current_portion_long_term_debt`, `notes_payable`, `convertible_debt`
-   - Per company take the newest row that has an `accession`.
+4. **Debt, all companies in one call:** `get_financial_statements(tickers=["us:AMD", "us:NVDA", "us:AVGO"], kind="balance_sheet", period="quarterly", limit_per_instrument=3)` → `instrument_id`, `period_end`, `accession`, `long_term_debt`, `current_portion_long_term_debt`, `notes_payable`, `convertible_debt`
+   - Per company take the newest row that carries an `accession` or any non-null debt line (a month-end provider stub can sit above the filed `10-Q` with `null` debt lines; skip that stub). If quarterly balance sheets still have no debt line, check the fiscal-year balance sheet (`period="annual"`, `limit_per_instrument=2`) before declaring EV unavailable.
 
 For each company take the newest fiscal-year row (drop `form` `10-Q` rows first) from calls 2 and 3. The target's diluted share count is `weighted_average_diluted_shares` on that row. A company that reports in another currency than the dollar stays out of the enterprise-value multiples unless you convert with `usd_rate`; say which you left out.
 
@@ -68,18 +68,17 @@ For each company take the newest fiscal-year row (drop `form` `10-Q` rows first)
   - Forward P/E: `peer multiple × forward_eps`. This is already a price per share; do not subtract debt or divide by shares.
 - Explain *why* the target deserves a premium or discount to the peer median, using numbers from the table.
 
-## Output Format
+## Output Format (Keep Concise — Positioning First, Caveats Last)
 
-1. **Peer Table** (target first, then peers by market cap):
+Keep the report crisp (~55–80 lines). Lead with where the company sits against its peers, not missing-field disclaimers:
+1. **Top 3 Takeaways (3–4 lines max):** where the target sits against peer quartiles on valuation (Fwd P/E, EV/Rev, EV/FCF) vs. fundamentals (revenue growth, FCF margin, ROIC), and whether its growth/returns explain its premium or discount. *(Note: cyclical peak earnings—e.g. memory semiconductors at peak margins—naturally produce single-digit forward P/Es; explain cyclicality rather than calling it a data error.)*
+2. **Peer Table + Quartile Benchmarks** (target first, then peers by market cap, followed immediately by the 25th / Median / 75th / Count rows):
 
 | Company | Mkt Cap ($B) | EV ($B) | EV / Revenue | EV / EBIT | EV / EBITDA (FY) | EV / FCF (FY) | P/E (TTM) | Fwd P/E | Rev Growth YoY | FCF Margin (FY) | ROIC | 1Y Share Chg | Fiscal year end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 
-2. **Benchmarks:** 25th / Median / 75th rows, then the count of peers behind each column.
-3. **Implied Share Price Range:** one row per method (25th, median, 75th) beside the current `price` and its `latest_date`.
-4. **Premium or Discount:** two or three sentences with the numbers that justify it. *(Not investment advice.)*
-5. **What Limits This Table:** peers without an enterprise value, fiscal years that end months apart, and any peer you kept despite a doubt.
-6. **Sources:** see below. For a batched statement call, add one line per company with its `period_end` and `accession`.
+3. **Illustrative Mechanical Peer-Multiple Translation (Optional Context at Bottom):** show what applying peer 25th/median/75th multiples to the target's figures produces mathematically, explicitly framed as an illustration rather than a price target. *(Not investment advice.)*
+4. **Sources & Scope Notes (Compact Footer):** one compact `Sources` table + 1–2 short lines on any dropped peers or fiscal-year mismatches.
 
 ## Sources (Required)
 
