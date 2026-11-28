@@ -72,7 +72,7 @@ Keep the four newest fiscal years from each.
 
 ### 5. Form 4 Insider Selling: Unscheduled vs. Rule 10b5-1
 - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", limit=500)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `price_per_share`, `transaction_value`, `owners`, `filing_date`, `accession`
-- Set `start` to one year before today. Score only open-market sales (code `S`) and buys (code `P`). Report the other codes as counts: awards (`A`), exercises (`M`), tax withholding (`F`), gifts (`G`), other disposals (`D`).
+- Set `start` to one year before today. Rows arrive **newest first**; if `next_cursor` is not `null` (heavy-volume issuers like Meta can file >500 rows/year), either fetch one more page with `cursor` set to `next_cursor` or explicitly state the earliest `transaction_date` reached. Score only open-market sales (code `S`) and buys (code `P`). Report the other codes as counts: awards (`A`), exercises (`M`), tax withholding (`F`), gifts (`G`), other disposals (`D`).
 - A sale with `is_10b5_1` true is scheduled; false is discretionary; `null` is not stated. Print the earliest and latest `transaction_date` among the rows, because coverage can stop short of today.
 - **Measure:** discretionary sales, by insider and date; and buys.
 - "Within 60 days" means any span of 60 days inside the window, of any size.

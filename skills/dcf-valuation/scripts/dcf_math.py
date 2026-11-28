@@ -35,9 +35,7 @@ from datetime import date
 GROWTH_CAP = 20.0          # base-case cap unless backed by broad analyst consensus
 GROWTH_CAP_BACKED = 28.0   # allowed when both consensus years exceed 20% with >= 5 analysts
 MIN_ANALYSTS = 5           # fewer estimates than this is not a consensus
-FADE_5Y = 0.875            # 5-year stage: each year keeps 87.5% of prior year's growth
-FADE_10Y = 0.90            # 10-year compounder stage: gradual fade toward terminal growth
-LONG_HORIZON_TRIGGER = 12.0  # companies growing >= 12% compound past year 5; a 5-year cutoff truncates value
+FADE_10Y = 0.88            # single smooth 10-year fade across all growth rates (zero step-function cliff)
 TV_SHARE_FLAG = 82.0       # above this share of value in the terminal year, the result is mostly an assumption
 DISAGREE_FLAG = 45.0       # a model this far from the price says more about its assumptions than about the company
 HISTORY_YEARS = 6
@@ -110,11 +108,10 @@ def value(fcf0, growth_pcts, wacc_pct, g_pct, net_debt, shares):
 
 
 def path(g1, g_inf, years=10):
-    """Smooth two-stage fade over `years`: high growth fades gradually; modest growth reaches terminal quickly."""
-    fade = FADE_10Y if g1 >= LONG_HORIZON_TRIGGER else (0.80 if years > 5 else FADE_5Y)
+    """Continuous 10-year geometric fade (`FADE_10Y`) toward `g_inf` — no threshold cliff at any growth rate."""
     rates = [g1]
     while len(rates) < years:
-        rates.append(max(rates[-1] * fade, g_inf))
+        rates.append(max(rates[-1] * FADE_10Y, g_inf))
     return rates
 
 

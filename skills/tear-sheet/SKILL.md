@@ -50,8 +50,8 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 6. **Revenue segments:** `get_sec_filings(view="segments", ticker="us:AAPL", limit=60)` → `segment`, `period`, `flow`, `revenue`
 7. **Debt schedule:** `get_sec_filings(view="debt_maturities", ticker="us:AAPL", limit=1)` → `year`, `y1`, `y2`, `y3`, `y4`, `y5`, `after5`
 8. **Top holders:** `get_sec_filings(view="institutional_ownership", ticker="us:AAPL", limit=15)` → `holder`, `report_date`, `shares`, `market_value_usd`, `pct`, `put_call`, `shares_change_qoq_pct`, `filing_date`
-9. **Insider trades, last 12 months:** `get_sec_filings(view="insider_transactions", ticker="us:AAPL", start="2025-01-15", transaction_code="P,S", limit=300)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
-   - Set `start` to one year before today. Without it the rows begin with the earliest years on file.
+9. **Insider trades, last 12 months:** `get_sec_filings(view="insider_transactions", ticker="us:AAPL", start="2025-01-15", transaction_code="P,S", limit=400)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `shares`, `transaction_value`, `filing_date`
+   - Set `start` to one year before today. Rows arrive newest first; if `next_cursor` is not `null`, follow `next_cursor` once or state the earliest `transaction_date` reached.
 
 ---
 

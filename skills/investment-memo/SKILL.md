@@ -52,10 +52,10 @@ Each call is written exactly as the QuantSet MCP tool accepts it (your client ma
 4. **Segments, debt, insiders, holders** (US listings only):
    - `get_sec_filings(view="segments", ticker="us:NVDA", limit=60)` → `segment`, `period`, `flow`, `revenue`
    - `get_sec_filings(view="debt_maturities", ticker="us:NVDA", limit=1)` → `year`, `y1`, `y2`, `y3`, `y4`, `y5`, `after5`
-   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", transaction_code="P,S", limit=300)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `transaction_value`, `owners`, `filing_date`
+   - `get_sec_filings(view="insider_transactions", ticker="us:NVDA", start="2025-01-15", transaction_code="P,S", limit=400)` → `transaction_date`, `transaction_code`, `is_10b5_1`, `transaction_value`, `owners`, `filing_date`
    - `get_sec_filings(view="institutional_ownership", ticker="us:NVDA", limit=15)` → `holder`, `report_date`, `shares`, `market_value_usd`, `put_call`, `shares_change_qoq_pct`, `filing_date`
    - `year` on the debt row is the fiscal year of the filing, and `y1` and `y2` are the amounts due in the first and second year after it.
-   - Set `start` to one year before today. Count open-market sales (`transaction_code` `S`) and buys (`P`) only; `is_10b5_1` true is scheduled, false discretionary, `null` not stated. Print the earliest and latest `transaction_date` among the rows. Leave out holder rows whose `put_call` is set. `flow` `Y` marks a full fiscal year of segment revenue and `Q` a single quarter.
+   - Set `start` to one year before today. Rows arrive newest first; if `next_cursor` is not `null`, follow `next_cursor` once or state the earliest `transaction_date` reached. Count open-market sales (`transaction_code` `S`) and buys (`P`) only; `is_10b5_1` true is scheduled, false discretionary, `null` not stated. Print the earliest and latest `transaction_date` among the rows. Leave out holder rows whose `put_call` is set. `flow` `Y` marks a full fiscal year of segment revenue and `Q` a single quarter.
 5. **ETF crowding:** `get_etf_data(ticker="us:NVDA", view="exposures", limit=25)` → `fund_symbol`, `fund_name`, `weight_pct`, `market_value`, `as_of`. Drop rows whose `as_of` is more than a year old.
 6. **Hurdle rate:** `get_macro_and_fx(view="treasury_yields", limit=1)` → `date`, `yield_10y_pct`. It is the US dollar risk-free return the expected return has to beat; for a non-dollar listing say that it is a dollar rate.
 
